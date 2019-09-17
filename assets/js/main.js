@@ -17,7 +17,7 @@ function initAutocomplete(element){
    element, {types: ['geocode']}
   );
 
-  autocomplete.setFields(['address_component']);
+  // autocomplete.setFields(['address_component']);
 
   autocomplete.addListener('place_changed', ()=>{
     console.log('place_changed');
