@@ -171,7 +171,7 @@ body {
   height: 100%;
   display: flex;
   justify-content: center;
-  align-items: flex-start;
+  align-items: center;
 }
 
 .animationFadeIn {
@@ -188,10 +188,7 @@ body {
   text-transform: capitalize;
   padding: 1rem 2.5rem;
   border-radius: 5rem;
-  display: inline-block;
-  margin-top: 3rem;
   transition: all 0.2s;
-  position: relative;
   cursor: pointer;
   border: none;
   outline: none;
