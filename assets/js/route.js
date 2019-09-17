@@ -1,13 +1,6 @@
 class Route {
   constructor(startLocation, endLocation, tripCallback) {
     this.stops = [];
-
-    // ?
-    this.map = null;
-
-    this.start = startLocation;
-    this.end = endLocation;
-    // OR
     this.stops.push(startLocation, endLocation);
 
     this.tripCallback = tripCallback;
