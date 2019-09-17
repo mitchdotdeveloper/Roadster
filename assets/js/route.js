@@ -2,16 +2,10 @@ class Route {
   constructor(locations, tripCallback) {
     this.startLocation = locations.start;
     this.endLocation = locations.end;
-
-    this.startLatLng = {
-      lat: this.startLocation.geometry.location.lat(),
-      lng: this.startLocation.geometry.location.lng(),
-    }
-
-    this.endLatLng = {
-      lat: this.endLocation.geometry.location.lat(),
-      lng: this.endLocation.geometry.location.lng(),
-    }
+    this.startLatLng = { lat: this.startLocation.geometry.location.lat(),
+                         lng: this.startLocation.geometry.location.lng() }
+    this.endLatLng = { lat: this.endLocation.geometry.location.lat(),
+                       lng: this.endLocation.geometry.location.lng() };
 
     this.waypoints = [];
     this.map = null;
@@ -39,41 +33,21 @@ class Route {
   initMap() {
     let directionsRenderer = new google.maps.DirectionsRenderer;
     let directionsService = new google.maps.DirectionsService;
+    this.map = new google.maps.Map(document.getElementById('map'), {
+      zoom: 7,
+      center: this.startLatLng,
+      disableDefaultUI: true,
+      styles: mapStyles
+    });
 
-    if (!this.startLatLng) {
-      navigator.geolocation.getCurrentPosition(
-        pos => {
-          this.startLatLng = {'lat': pos.coords.latitude, 'lng': pos.coords.longitude}
-          this.map = new google.maps.Map(document.getElementById('map'), {
-            zoom: 7,
-            center: this.startLatLng,
-            disableDefaultUI: true,
-            style: mapStyles
-          });
-          directionsRenderer.setMap(this.map);
-          this.calculateAndDisplayRoute(directionsService, directionsRenderer);
-        },
-        err => console.warn(`ERROR (${err.code}): ${err.message}`),
-        {enableHighAccuracy: true} );
-    } else {
-      console.log(this.startLatLng)
-      this.map = new google.maps.Map(document.getElementById('map'), {
-        zoom: 7,
-        center: this.startLatLng,
-        disableDefaultUI: true,
-        styles: mapStyles
-      });
-
-      directionsRenderer.setMap(this.map);
-      this.calculateAndDisplayRoute(directionsService, directionsRenderer);
-    }
+    directionsRenderer.setMap(this.map);
+    this.calculateAndDisplayRoute(directionsService, directionsRenderer);
   }
 
   calculateAndDisplayRoute(directionsService, directionsRenderer) {
-    this.endLocation = this.endLocation || {lat: 33.634876, lng: -117.740479};
     directionsService.route({
       origin: this.startLatLng,
-      destination: this.endLatLng || 'LearningFuze',
+      destination: this.endLatLng,
       travelMode: 'DRIVING'
     }, (response, status) => {
       if (status == 'OK') {

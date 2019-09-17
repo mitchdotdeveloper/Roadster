@@ -1,12 +1,16 @@
 $(document).ready(init)
 
-const state = {};
+const state = {
+  start: null,
+  end: null
+};
 
 function init(){
   $('#searchBoxGo').on('click', startTrip);
 }
 let trip;
 function startTrip(event){
+  if (!state.start || !state.end) return;
   event.preventDefault();
   trip = new Trip(state);
   trip.renderRoute();
@@ -16,8 +20,6 @@ function initAutocomplete(element){
   let autocomplete = new google.maps.places.Autocomplete(
    element, {types: ['geocode']}
   );
-
-  // autocomplete.setFields(['address_component']);
 
   autocomplete.addListener('place_changed', function(){
     console.log(state);
