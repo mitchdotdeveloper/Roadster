@@ -5,10 +5,10 @@ const state = {};
 function init(){
   $('#searchBoxGo').on('click', startTrip);
 }
-
+let trip;
 function startTrip(event){
   event.preventDefault();
-  const trip = new Trip(state);
+  trip = new Trip(state);
   trip.renderRoute();
 }
 

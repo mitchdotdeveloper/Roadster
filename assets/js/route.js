@@ -1,10 +1,8 @@
 class Route {
   constructor(locations, tripCallback) {
-    console.log(locations.start)
     this.startLocation = locations.start;
     this.endLocation = locations.end;
     this.waypoints = [];
-    this.waypoints.push(this.startLocation, this.endLocation);
     this.map = null;
 
     this.tripCallback = tripCallback;
@@ -13,7 +11,7 @@ class Route {
   onConfirm () {
     this.waypoints.unshift( this.startLocation );
     this.waypoints.push( this.endLocation );
-    this.tripCallback( this.stops );
+    this.tripCallback( this.waypoints , this.map );
   }
 
   render () {
@@ -53,9 +51,10 @@ class Route {
   }
 
   calculateAndDisplayRoute(directionsService, directionsRenderer) {
+    this.endLocation = this.endLocation || {lat: 33.634876, lng: -117.740479};
     directionsService.route({
       origin: this.startLocation,
-      destination: this.endLocation || 'LearningFuze',
+      destination: this.endLocation,
       travelMode: 'DRIVING'
     }, (response, status) => {
       if (status == 'OK') {
