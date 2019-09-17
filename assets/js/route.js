@@ -1,9 +1,10 @@
 class Route {
-  constructor(startLocation, endLocation, tripCallback) {
-    this.startLocation = startLocation;
-    this.endLocation = endLocation;
+  constructor(locations, tripCallback) {
+    console.log(locations.start)
+    this.startLocation = locations.start;
+    this.endLocation = locations.end;
     this.waypoints = [];
-    this.waypoints.push(startLocation, endLocation);
+    this.waypoints.push(this.startLocation, this.endLocation);
     this.map = null;
 
     this.tripCallback = tripCallback;
@@ -30,10 +31,10 @@ class Route {
     if (!this.startLocation) {
       navigator.geolocation.getCurrentPosition(
         pos => {
-          this.startLocation = {'lat': pos.coords.latitude, 'long': pos.coords.longitude}
+          this.startLocation = {'lat': pos.coords.latitude, 'lng': pos.coords.longitude}
           this.map = new google.maps.Map(document.getElementById('map'), {
             zoom: 7,
-            center: { lat: this.startLocation.lat, lng: this.startLocation.long }
+            center: this.startLocation
           });
           directionsRenderer.setMap(this.map);
           this.calculateAndDisplayRoute(directionsService, directionsRenderer);
@@ -53,7 +54,7 @@ class Route {
 
   calculateAndDisplayRoute(directionsService, directionsRenderer) {
     directionsService.route({
-      origin: typeof this.startLocation === 'string' ? this.startLocation : {lat: this.startLocation.lat, lng: this.startLocation.long},
+      origin: this.startLocation,
       destination: this.endLocation || 'LearningFuze',
       travelMode: 'DRIVING'
     }, (response, status) => {

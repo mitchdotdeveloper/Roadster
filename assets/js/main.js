@@ -1,14 +1,14 @@
 $(document).ready(init)
 
+const state = {};
+
 function init(){
   $('#searchBoxGo').on('click', startTrip);
 }
 
 function startTrip(event){
   event.preventDefault();
-  const startLocation = $('#searchBoxStart').val();
-  const endLocation = $('#searchBoxEnd').val();
-  const trip = new Trip(startLocation, endLocation);
+  const trip = new Trip(state);
   trip.renderRoute();
 }
 
@@ -19,8 +19,11 @@ function initAutocomplete(element){
 
   // autocomplete.setFields(['address_component']);
 
-  autocomplete.addListener('place_changed', ()=>{
-    console.log('place_changed');
+  autocomplete.addListener('place_changed', function(){
+    state[$(element).attr('data-location')] = {
+      lat: autocomplete.getPlace().geometry.location.lat(),
+      lng: autocomplete.getPlace().geometry.location.lng(),
+    }
   });
 }
 
