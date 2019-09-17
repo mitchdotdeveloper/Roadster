@@ -21,7 +21,7 @@ class Place {
     let placesServiceObj = new google.maps.places.PlacesService(this.mapObject);
     let locationObjToSearch = new google.maps.LatLng(this.location.lat, this.location.lng);
     let request = {
-      location: this.locationObjToSearch,
+      location: locationObjToSearch,
       radius: '30000',
       type: ['restaurant']
     };

@@ -5,10 +5,10 @@ const state = {};
 function init(){
   $('#searchBoxGo').on('click', startTrip);
 }
-
+let trip;
 function startTrip(event){
   event.preventDefault();
-  const trip = new Trip(state);
+  trip = new Trip(state);
   trip.renderRoute();
 }
 
@@ -20,10 +20,8 @@ function initAutocomplete(element){
   // autocomplete.setFields(['address_component']);
 
   autocomplete.addListener('place_changed', function(){
-    state[$(element).attr('data-location')] = {
-      lat: autocomplete.getPlace().geometry.location.lat(),
-      lng: autocomplete.getPlace().geometry.location.lng(),
-    }
+    console.log(state);
+    state[$(element).attr('data-location')] = autocomplete.getPlace();
   });
 }
 
