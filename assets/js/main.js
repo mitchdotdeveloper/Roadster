@@ -17,10 +17,7 @@ function initAutocomplete(element){
    element, {types: ['geocode']}
   );
 
-  // autocomplete.setFields(['address_component']);
-
   autocomplete.addListener('place_changed', function(){
-    console.log(state);
     state[$(element).attr('data-location')] = autocomplete.getPlace();
   });
 }
