@@ -204,12 +204,104 @@ body {
 }
 
 /*******************************
+          PLACES
+*******************************/
+
+.places__Container {
+  height: 90%;
+  width: 90%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.places__LogoContainer {
+  height: 5%;
+  width: 95%;
+  display: flex;
+  justify-content:flex-start;
+  align-items: center;
+  font-size: 3rem;
+}
+
+.places__FilterContainer {
+  height: 10%;
+  width: 90%;
+  display:flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.places__FilterButtons {
+  height: 100%;
+  width: 30%;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  /* background-color: #394a6d; */
+  border-radius: 5px;
+}
+
+.places__FilterWeather {
+  height: 100%;
+  width: 65%;
+  border: 2px solid #3c9d9b;
+  border-radius: 5px;
+}
+
+.places__FilterWeather-Current {
+  height: 100%;
+  width: 40%;
+
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.places__FilterWeather-Forecast {
+  height: 100%;
+  width: 60%;
+
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.places__ListContainer {
+  height: 75%;
+  width: 90%;
+
+  opacity: 0.8;
+  background-color: #fff;
+  border: 2px solid #394a6d;
+  border-radius: 5px;
+  overflow: auto;
+}
+
+.places__ListItem {
+  height: 20%;
+  width: 100%;
+
+}
+
+.places__Confirm {
+  height: 5%;
+  width: 100%;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/*******************************
           BUTTONS
 *******************************/
 
 .btn, .btn:link, .btn:visited {
   font-size: 2rem;
   text-decoration: none;
+  text-align: center;
   text-transform: capitalize;
   padding: 1rem 2.5rem;
   border-radius: 5rem;
@@ -247,13 +339,14 @@ body {
   transition: all 0.3s;
 }
 
-/* .btn--white {
-  background-color: #fff;
-  color: #777;
+.btn--white {
+  background-color:  #394a6d;
+  color: #fff;
 }
 .btn--white::after {
-  background-color: #fff;
-} */
+  background-color:  #394a6d;
+  color: #fff;
+}
 
 .btn--green {
   background-color: #52de97;
