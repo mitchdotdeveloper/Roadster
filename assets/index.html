@@ -10,16 +10,32 @@
     <!-- End fonts -->
     <link rel="stylesheet" href="css/style.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-    <script src="js/map.js"></script>
+    <script src="js/route.js"></script>
     <script src="js/place.js"></script>
     <script src="js/trip.js"></script>
     <script src="js/main.js"></script>
+  <style>
+    /* Always set the map height explicitly to define the size of the div
+         * element that contains the map. */
+    #map {
+      height: 100%;
+      z-index: 100;
+    }
+
+    /* Optional: Makes the sample page fill the window. */
+    html,
+    body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+    }
+  </style>
   </head>
   <body>
     <div class="main">
       <div class="landing__Container">
         <div class="landing__Video">
-          <video src="/assets/videos/Map.mp4" class="landing__Video-Content" autoplay muted loop>
+          <video src="videos/Map.mp4" class="landing__Video-Content" autoplay muted loop>
           </video>
           <div class="landing__Video-Overlay"></div>
         </div>
