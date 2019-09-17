@@ -43,7 +43,7 @@ class Route {
     } else {
       this.map = new google.maps.Map(document.getElementById('map'), {
         zoom: 7,
-        center: { lat: this.startLocation.lat, lng: this.startLocation.long }
+        center: this.startLocation
       });
 
       directionsRenderer.setMap(this.map);
