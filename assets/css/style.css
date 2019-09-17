@@ -183,25 +183,75 @@ body {
             MAP
 *******************************/
 
+.logo{
+  text-align: left;
+  font-size: 3.5rem;
+  text-shadow: 1px 1px 1px #394a6d;
+  font-family: interstate, sans-serif;
+  font-weight: 700;
+  font-style: normal;
+  margin-bottom:5px;
+
+}
 .map__Container{
   position: relative;
-  margin: auto;
   width:90%;
-  height:90vh;
+  height:90%;
 }
 #map{
+  border: 4px solid #394a6d;
+  border-radius:10px;
   width:100%;
   height:100%;
+  box-shadow: 0 0 5px rgba(0,0,0,.5);
 }
-
 .map__Overlay{
   z-index: 101;
   position: absolute;
   margin-top:1.5%;
   left:1%;
-  background-color:rgba(0, 0, 0, .5);
+  background-color:rgb(100, 100, 100, .4);
+  border-radius: 15px;
   height:95%;
   width:20%;
+  display:flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+
+}
+.stops{
+  margin-top:10px;
+  color:white;
+  font-size:2.75rem;
+  font-family: navigo, sans-serif;
+  font-weight: 500;
+  font-style: normal;
+}
+.overlay__Card{
+  box-shadow: 1px 1px 3px rgba(0,0,0,.5);
+  display:flex;
+  justify-content: center;
+  align-items: center;
+  font-size:2rem;
+  margin-top: 15px;
+  width:85%;
+  height:75px;
+  border-radius:5px;
+  background-color:#394a6d;
+  color:white;
+  font-family: interstate, sans-serif;
+  font-weight: 300;
+  font-style: normal;
+  transition: .1s ease;
+}
+.overlay__Card.empty{
+  cursor: pointer;
+  color:white;
+  background-color:#3c9d9b;
+}
+.overlay__Card:hover{
+  transform: scale(1.05);
 }
 
 /*******************************

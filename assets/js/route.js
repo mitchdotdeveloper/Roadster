@@ -17,16 +17,27 @@ class Route {
     this.waypoints.push( this.endLocation );
     this.tripCallback( this.waypoints , this.map );
   }
-
+  createLocationCard(location){
+    let card = $('<div>').addClass('overlay__Card');
+    let title = $('<div>').addClass('title').text(location.name);
+    card.append(title);
+    return card
+  }
   render () {
     $('.main').empty();
+    let logo = $('<div>').addClass('logo').text('ROADSTER');
     let mapContainer = $('<div>').addClass('map__Container');
     let map = $('<div>').attr('id', 'map');
     let overlay = $('<div>').addClass('map__Overlay');
-    let startLocation = $('<div>').addClass('overlay__Card');
-    let endLocation = $('<div>').addClass('overlay__Card');
+    let stopHeading = $('<div>').addClass('stops').text("Your Route:")
+    let addCard = $('<div>').addClass('overlay__Card').addClass('empty').html('<i class="fa fa-plus"></i>');
+    overlay.append(
+        stopHeading,
+        this.createLocationCard(this.startLocation),
+        this.createLocationCard(this.endLocation),
+        addCard);
     mapContainer.append(overlay, map);
-    $('.main').append(mapContainer);
+    $('.main').append(logo, mapContainer);
     this.initMap();
   }
 

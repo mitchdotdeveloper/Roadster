@@ -22,7 +22,6 @@ function initAutocomplete(element){
   );
 
   autocomplete.addListener('place_changed', function(){
-    console.log(state);
     state[$(element).attr('data-location')] = autocomplete.getPlace();
   });
 }
