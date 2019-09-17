@@ -1,39 +1,67 @@
 class Route {
   constructor(startLocation, endLocation, tripCallback) {
-    this.stops = [];
-    this.stops.push(startLocation, endLocation);
+    this.startLocation = startLocation;
+    this.endLocation = endLocation;
+    this.waypoints = [];
+    this.waypoints.push(startLocation, endLocation);
+    this.map = null;
 
     this.tripCallback = tripCallback;
   }
 
   onConfirm () {
-    this.tripCallback(this);
-    // OR
-    this.tripCallback(this.stops);
+    this.waypoints.unshift( this.startLocation );
+    this.waypoints.push( this.endLocation );
+    this.tripCallback( this.stops );
   }
 
   render () {
-    $('body').append( $('<div>').attr('id', 'map') );
-    $('body').after('<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAGcnHGaTjPgQDfwq2MdeCJx60EqC5ud0c&callback=showMap" async defer></script>');
+    $('.main').empty();
+    // $('.main').append( $('<div>').addClass('map__Container') );
+    // $('.map__Container').append( $('<div>').attr('id', 'map') );
+    $('body').append($('<div>').attr('id', 'map'));
+    this.initMap();
   }
-}
 
-var map;
-function showMap () {
+  initMap() {
+    let directionsRenderer = new google.maps.DirectionsRenderer;
+    let directionsService = new google.maps.DirectionsService;
 
-  // <style>
-  //   #map {
-  //     height: 100%;
-  // }
-  //     html, body {
-  //     height: 100%;
-  //   margin: 0;
-  //   padding: 0;
-  // }
-  // </style>
+    if (!this.startLocation) {
+      navigator.geolocation.getCurrentPosition(
+        pos => {
+          this.startLocation = {'lat': pos.coords.latitude, 'long': pos.coords.longitude}
+          this.map = new google.maps.Map(document.getElementById('map'), {
+            zoom: 7,
+            center: { lat: this.startLocation.lat, lng: this.startLocation.long }
+          });
+          directionsRenderer.setMap(this.map);
+          this.calculateAndDisplayRoute(directionsService, directionsRenderer);
+        },
+        err => console.warn(`ERROR (${err.code}): ${err.message}`),
+        {enableHighAccuracy: true} );
+    } else {
+      this.map = new google.maps.Map(document.getElementById('map'), {
+        zoom: 7,
+        center: this.startLocation
+      });
 
-  map = new google.maps.Map(document.getElementById('map'), {
-    center: { lat: -34.397, lng: 150.644 },
-    zoom: 8
-  });
+      directionsRenderer.setMap(this.map);
+      this.calculateAndDisplayRoute(directionsService, directionsRenderer);
+    }
+  }
+
+  calculateAndDisplayRoute(directionsService, directionsRenderer) {
+    directionsService.route({
+      origin: typeof this.startLocation === 'string' ? this.startLocation : {lat: this.startLocation.lat, lng: this.startLocation.long},
+      destination: this.endLocation || 'LearningFuze',
+      travelMode: 'DRIVING'
+    }, (response, status) => {
+      if (status == 'OK') {
+        directionsRenderer.setDirections(response);
+      } else {
+        window.alert('Directions request failed due to ' + status);
+      }
+    });
+  }
 }
