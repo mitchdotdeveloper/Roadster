@@ -15,6 +15,7 @@ class Trip{
     this.waypoints = waypoints;
     this.map = map;
     this.places = new Place(this.map, this.waypoints[this.waypoints.length-1], this.placesCallback);
+    this.weather = new Weather(this.waypoints[this.waypoints.length-1]);
     this.renderPlaces();
   }
   renderRoute(){
@@ -27,4 +28,7 @@ class Trip{
   renderPlaces() {
     this.places.fetchNearbyPlaces();
   }
+  // renderWeather() {
+  //   this.weather.processWeatherData();
+  // }
 }
