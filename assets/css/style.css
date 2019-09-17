@@ -221,7 +221,7 @@ body {
 
 }
 .stops{
-  margin-top:10px;
+  margin-top:2%;
   color:white;
   font-size:2.75rem;
   font-family: navigo, sans-serif;
@@ -234,7 +234,9 @@ body {
   justify-content: center;
   align-items: center;
   font-size:2rem;
+  margin: auto;
   margin-top: 15px;
+  margin-bottom:10px;
   width:85%;
   height:75px;
   border-radius:5px;
@@ -244,14 +246,27 @@ body {
   font-weight: 300;
   font-style: normal;
   transition: .1s ease;
+
 }
 .overlay__Card.empty{
   cursor: pointer;
   color:white;
-  background-color:#3c9d9b;
+  background-color:rgba(60, 157, 155, 0.7);
+}
+.overlay__Card.confirm{
+  background-color: rgba(60, 157, 155, 1);
 }
 .overlay__Card:hover{
   transform: scale(1.05);
+}
+.card__Container{
+  /* display:flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center; */
+  width:100%;
+  height:78%;
+  overflow-y: scroll;
 }
 
 /*******************************

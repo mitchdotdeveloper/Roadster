@@ -10,6 +10,8 @@ class Route {
     this.waypoints = [];
     this.map = null;
     this.tripCallback = tripCallback;
+    this.onConfirm = this.onConfirm.bind(this);
+
   }
 
   onConfirm () {
@@ -25,17 +27,36 @@ class Route {
   }
   render () {
     $('.main').empty();
-    let logo = $('<div>').addClass('logo').text('ROADSTER');
-    let mapContainer = $('<div>').addClass('map__Container');
-    let map = $('<div>').attr('id', 'map');
-    let overlay = $('<div>').addClass('map__Overlay');
-    let stopHeading = $('<div>').addClass('stops').text("Your Route:")
-    let addCard = $('<div>').addClass('overlay__Card').addClass('empty').html('<i class="fa fa-plus"></i>');
+    const logo = $('<div>').addClass('logo').text('ROADSTER');
+    const mapContainer = $('<div>').addClass('map__Container');
+    const map = $('<div>').attr('id', 'map');
+    const overlay = $('<div>').addClass('map__Overlay');
+
+    const stopHeading = $('<div>')
+                            .addClass('stops')
+                            .text("Your Route:");
+
+    const addCard = $('<div>')
+                        .addClass('overlay__Card empty')
+                        .html('<i class="fa fa-plus"></i>');
+
+    const cardContainer = $('<div>')
+                              .addClass('card__Container');
+
+    const confirmButton = $('<div>')
+                              .addClass('overlay__Card confirm')
+                              .text('Confirm')
+                              .on('click', this.onConfirm);
+    cardContainer.append(
+      this.createLocationCard(this.startLocation),
+      this.createLocationCard(this.endLocation),
+      addCard);
     overlay.append(
         stopHeading,
-        this.createLocationCard(this.startLocation),
-        this.createLocationCard(this.endLocation),
-        addCard);
+        cardContainer,
+        confirmButton
+        );
+
     mapContainer.append(overlay, map);
     $('.main').append(logo, mapContainer);
     this.initMap();
