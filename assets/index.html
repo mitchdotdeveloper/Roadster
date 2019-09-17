@@ -16,5 +16,36 @@
     <script src="js/main.js"></script>
   </head>
   <body>
+    <div class="main">
+      <div class="landing__Container">
+        <div class="landing__Video">
+          <video src="/assets/videos/Map.mp4" class="landing__Video-Content" autoplay muted loop>
+          </video>
+          <div class="landing__Video-Overlay"></div>
+        </div>
+        <div class="landing__Logo">
+          <h1 class="interstate-bold">ROADSTER</h1>
+        </div>
+        <div class="landing__SearchBox">
+          <div class="landing__Search-Top">
+            <div class="landing__SearchBox-Start">
+              <h2 class="landing__SearchBox-Title interstate-light">Start Location</h2>
+              <input type="text" class="landing__SearchBox-Value interstate-extra-light" id="searchBoxStart"
+                placeholder="Where are you coming from?" required>
+            </div>
+            <div class="landing__SearchBox-End">
+              <h2 class="landing__SearchBox-Title interstate-light">End Location</h2>
+              <input type="text" class="landing__SearchBox-Value interstate-extra-light" id="searchBoxEnd"
+                placeholder="Where are you going?" required>
+            </div>
+          </div>
+          <div class="landing__Search-Bottom">
+            <div class="landing__SearchBox-Go">
+              <button class="btn btn--green" id="searchBoxGo" type="submit">Let's Go! &rarr;</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </body>
 </html>
