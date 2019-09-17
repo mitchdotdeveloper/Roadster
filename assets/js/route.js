@@ -14,7 +14,6 @@ class Route {
     }
 
     this.waypoints = [];
-    this.waypoints.push(this.startLatLng, this.endLatLng);
     this.map = null;
     this.tripCallback = tripCallback;
   }

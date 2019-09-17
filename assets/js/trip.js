@@ -9,11 +9,12 @@ class Trip{
     this.placesCallback = this.placesCallback.bind(this);
 
     this.route = new Route(locations, this.routeCallback);
+    this.renderRoute();
   }
   routeCallback(waypoints, map){
     this.waypoints = waypoints;
     this.map = map;
-    this.places = new Place(this.map, this.waypoints[this.waypoints.length-1])
+    this.places = new Place(this.map, this.waypoints[this.waypoints.length-1], this.placesCallback);
     this.renderPlaces();
   }
   renderRoute(){
