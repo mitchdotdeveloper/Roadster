@@ -1,12 +1,12 @@
 class Trip{
-  constructor(startLocation, endLocation){
+  constructor(locations){
     this.waypoints = [];
-    this.startLocation = startLocation;
-    this.endLocation = endLocation
-    this.route = new Route(this.startLocation, this.endLocation, this.routeCallback);
+    this.startLocation = locations.start;
+    this.endLocation = locations.end;
+    this.route = new Route(locations, this.routeCallback);
   }
   routeCallback(waypoints){
-    //
+    console.log(waypoints);
   }
   renderRoute(){
     this.route.render();
