@@ -1,9 +1,18 @@
+/** Class representing places in a given area */
 class Place {
   constructor(mapObject, waypointsArray, tripCallback) {
+  /** Constructor stores arguments and creates Google Places object
+      @param {object} mapObject - The Google Maps Map object
+      @param {object} waypointsArray - An array containing objects containing location information on a place
+      @param {callback} tripCallback - Used to pass array of places back to the Trip object
+   */
+
     //Store data
-    this.mapObject = mapObject
-    this.waypointsArray = [waypointsArray, waypointsArray];
+    this.mapObject = mapObject;
+    // this.waypointsArray = waypointsArray;
+    this.waypointsArray = trip.waypoints;
     this.tripCallback = tripCallback;
+    this.currentWaypoint = null;
     // this.stopCounter = 0;
     // this.selectedPlaces = [];
     // this.stopsDataArray = [];
@@ -14,6 +23,7 @@ class Place {
 
     //Bind methods
     this.addResultsToList = this.addResultsToList.bind(this);
+    this.accordionClickHandler = this.accordionClickHandler.bind(this);
     // this.restaurantButtonHandler = this.restaurantButtonHandler.bind(this);
     // this.hotelButtonHandler = this.hotelButtonHandler.bind(this);
     // this.otherButtonHandler = this.otherButtonHandler.bind(this);
@@ -37,21 +47,28 @@ class Place {
   //   locationDataPromise.then(message => { console.log(message) }).catch(error => { console.log(error) });
   // }
 
+  /** @method onConfirm
+      @param none
+      Passes selected places back to Trip object
+   */
   // onConfirm() {
   //   //Pass selectedPlaces array back to Trip class
   //   this.tripCallback(this.selectedPlaces);
   // }
 
+/** @method fetchNearbyPlaces
+    @param none
+    Finds neary places to the given location
+ */
   fetchNearbyPlaces(waypoint = this.waypointsArray[0], placeType = 'restaurant') {
-    $('#accordion').empty();
-
+    this.currentWaypoint = waypoint;
     const radius = '15000';
     const validPlaceTypes = ['restaurant', 'lodging', 'natural_feature'];
     if (!validPlaceTypes.includes(placeType)) {
       return false;
     }
 
-    //For each stop, create Google Places Location & Request objects, find nearby places
+    //Create Google Places Location & Request objects
     const locationDataPromise = new Promise((resolve, reject) => {
       console.log('Getting location values now');
       let currentStopLocationData = {
@@ -112,6 +129,11 @@ class Place {
     //For other button, onclick => fetchNearbyPlaces('natural_feature')
   }
 
+  /** @method addResultsToList
+      @param {array} searchResults - Array of place objects
+      @param {string} searchStatus - Contains the status of the previous search
+      @returns {boolean} false - If searchStatus !== 'OK'
+   */
   addResultsToList(searchResults, searchStatus) {
     if (searchStatus !== 'OK') {
       return false;
@@ -121,8 +143,12 @@ class Place {
     }
   }
 
+  /** @method fetchInfoForSearchResult
+      @param {object} searchResult - Contains Google Place object
+      Fetches additional data about the Google Place object and appends it to the DOM
+   */
   fetchInfoForSearchResult(searchResult) {
-    let placeListItem = $('<div>').addClass('places__ListItem interstate-light'); //.attr('id', 'restraurants-tab').text('Restaurants found near ' + this.locationData.name + ': ')
+    let placeListItem = $('<div>').addClass('places__ListItem');
     let searchResultData = {};
     let request = {
       placeId: searchResult.place_id,
@@ -130,30 +156,36 @@ class Place {
         'url', 'types', 'photos', 'rating', 'user_ratings_total', 'price_level']
     };
     this.placesServiceObj.getDetails(request, function(place, status) {
-      console.log(status);
+      console.log('Detailed search status:', status);
       if (status !== 'OK') {
         return false;
       }
       for (let field of request.fields) {
         searchResultData[field] = place[field];
       }
-      placeListItem.append($('<div>').addClass('places__ListItem-Name').text(searchResultData.name)); //.text('Result ' + (resultIndex + 1) + ':')
+
+      placeListItem.append($('<div>').addClass('places__ListItem-Name').text(searchResultData.name));
       placeListItem.append($('<div>').addClass('places__ListItem-Address').text(searchResultData.formatted_address));
       placeListItem.append($('<div>').addClass('places__ListItem-Rating').text(`${searchResultData.rating} out of 5 stars (${searchResultData.user_ratings_total} reviews)`));
     });
 
-    $('#places__ListContainer' + this.stopCounter).append(placeListItem);
+    $('#places__AccordionContainer' + (this.waypointsArray.indexOf(this.currentWaypoint) + 1)).append(placeListItem);
+    // $('#places__Accordion-Name' + (this.waypointsArray.indexOf(this.currentWaypoint) + 1)).prepend(this.currentWaypoint.name);
 
     //Delete this section
     console.log('fetchingInfoForSearchResult:', searchResultData);
   }
 
+  /** @method renderPlacesPage
+      @param none
+      Appends the Places HTML structure to the DOM
+   */
   renderPlacesPage() {
     let accordionElements = '';
-    for (let stopIndex = 0; stopIndex < this.waypointsArray.length; stopIndex++) {
+    for (let stopIndex = 1; stopIndex <= this.waypointsArray.length; stopIndex++) {
       let individualAccordion = `
       <h1 class="places__Accordion-Name" id="places__Accordion-Name${stopIndex}">
-        <span class="places__Accordion-Weather" id="places__Accordion-Weather${stopIndex}">Current Weather: 79&#8457; </span>
+        <span class="places__Accordion-Weather" id="places__Accordion-Weather${stopIndex}"></span>
       </h1>
       <div class="places__AccordionContainer" id="places__AccordionContainer${stopIndex}"></div>
       `;
@@ -185,7 +217,7 @@ class Place {
     // $('#placesOther').on('click', this.otherButtonHandler);
 
     // $('.places__Accordion-Name').on('click', this.accordionClickHandler);
-    $('#places__Accordion-Name1').on('click', this.accordionClickHandler);
+    $('#places__Accordion-Name2').on('click', this.accordionClickHandler);
   }
 
   // restaurantButtonHandler() {
@@ -202,7 +234,7 @@ class Place {
 
   accordionClickHandler(event) {
     console.log($(event.currentTarget));
-    this.fetchNearbyPlaces(this.waypointsArray[1], 'lodging');
+    this.fetchNearbyPlaces(this.waypointsArray[1], 'restaurant');
   }
 
 }

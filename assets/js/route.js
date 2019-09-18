@@ -1,4 +1,10 @@
+/** Class representing the Google Map and Google Direction objects */
 class Route {
+  /** Constructor initializes and defines necessary properties for the
+      Google Maps object & Google Directions object
+      @param {object} locations - Contains autocomplete location object
+      @param {callback} tripCallback - Used to pass array of location objects back to the Trip object
+   */
   constructor(locations, tripCallback) {
     this.startLocation = locations.start;
     this.endLocation = locations.end;
@@ -8,23 +14,109 @@ class Route {
                        lng: this.endLocation.geometry.location.lng() };
 
     this.waypoints = [];
+    this.wayPointQueue = null;
     this.map = null;
     this.tripCallback = tripCallback;
     this.onConfirm = this.onConfirm.bind(this);
+    this.createWaypoint = this.createWaypoint.bind(this)
+    this.createLocationCard = this.createLocationCard.bind(this);
+    this.directionsRenderer = null;
+    this.directionsService = null;
 
   }
 
+  /** @method onConfirm
+      @param none
+      When the user has selected all locations - pass array of location objects to the Trips object
+   */
   onConfirm () {
     this.waypoints.unshift( this.startLocation );
     this.waypoints.push( this.endLocation );
-    this.tripCallback( this.waypoints , this.map );
+    this.tripCallback(this.waypoints , this.map );
   }
+
+  /** @method createWaypoint
+      @param {event} event - The 'plus' button that is clicked to add a waypoint
+      Adds waypoint to property that contains all of the selected waypoints and renders new waypoint to the DOM
+   */
+  createWaypoint(event){
+    let card = $(event.currentTarget).parent().parent();
+
+    if (this.wayPointQueue !== null) {
+      let latLng = {
+        lat: this.wayPointQueue.geometry.location.lat(),
+        lng: this.wayPointQueue.geometry.location.lng(),
+      }
+      card.text(this.wayPointQueue.name);
+      this.wayPointQueue = null;
+      this.waypoints.push({ location: latLng });
+
+      this.directionsRenderer.setMap(this.map);
+      this.calculateAndDisplayRoute();
+    } else {
+      card.parent().remove();
+    }
+  }
+
+  /** @method autoComplete
+      @param {object} element - Contains DOM object
+      Creates autocomplete object
+   */
+  autoComplete(element){
+    let autocomplete = new google.maps.places.Autocomplete(
+      element, { types: ['geocode'] }
+    );
+
+    autocomplete.addListener('place_changed', () => {
+       this.wayPointQueue = autocomplete.getPlace();
+    });
+  }
+
+  /** @method createLocationCard
+      @param {object} location - Contains information about givent location
+      Create and append location card to the DOM
+   */
   createLocationCard(location){
     let card = $('<div>').addClass('overlay__Card');
-    let title = $('<div>').addClass('title').text(location.name);
+    let title = $('<div>').addClass('title');
+    let form = null;
+    if(location.hasOwnProperty('name')){
+      title.text(location.name);
+    }
+    else{
+      form = document.createElement('input');
+      form.setAttribute('type', 'text');
+      title.append(
+        $('<form>')
+        .append($('<button>')
+          .attr('type', 'submit')
+          .html('<i class="fas fa-plus-circle fa-2x"></i>')
+          .on('click', this.createWaypoint))
+        .append($(form)
+        ));
+      this.autoComplete(form);
+    }
     card.append(title);
-    return card
+
+    if($('.overlay__Card').length > 3){
+      card
+        .insertBefore('.card__Container > .overlay__Card:nth-last-child(2)')
+        .on('submit', event => {
+          event.preventDefault();
+          $(event.currentTarget).text();
+        });
+
+    }
+    else{
+      card.insertBefore('.empty');
+    }
+
   }
+
+  /** @method render
+      @param none
+      Display initial map and card overlay
+   */
   render () {
     $('.main').empty();
     const logo = $('<div>').addClass('logo').text('ROADSTER');
@@ -38,7 +130,8 @@ class Route {
 
     const addCard = $('<div>')
                         .addClass('overlay__Card empty')
-                        .html('<i class="fa fa-plus"></i>');
+                        .html('<i class="fa fa-plus"></i>')
+                        .on('click', this.createLocationCard);
 
     const cardContainer = $('<div>')
                               .addClass('card__Container');
@@ -47,10 +140,7 @@ class Route {
                               .addClass('overlay__Card confirm')
                               .text('Confirm')
                               .on('click', this.onConfirm);
-    cardContainer.append(
-      this.createLocationCard(this.startLocation),
-      this.createLocationCard(this.endLocation),
-      addCard);
+
     overlay.append(
         stopHeading,
         cardContainer,
@@ -59,12 +149,19 @@ class Route {
 
     mapContainer.append(overlay, map);
     $('.main').append(logo, mapContainer);
+    cardContainer.append(addCard);
+    this.createLocationCard(this.startLocation);
+    this.createLocationCard(this.endLocation);
     this.initMap();
   }
 
+  /** @method initMap
+      @param none
+      Initializes Google Maps Map and Google Directions
+   */
   initMap() {
-    let directionsRenderer = new google.maps.DirectionsRenderer;
-    let directionsService = new google.maps.DirectionsService;
+    this.directionsRenderer = new google.maps.DirectionsRenderer;
+    this.directionsService = new google.maps.DirectionsService;
     this.map = new google.maps.Map(document.getElementById('map'), {
       zoom: 7,
       center: this.startLatLng,
@@ -72,18 +169,23 @@ class Route {
       styles: mapStyles
     });
 
-    directionsRenderer.setMap(this.map);
-    this.calculateAndDisplayRoute(directionsService, directionsRenderer);
+    this.directionsRenderer.setMap(this.map);
+    this.calculateAndDisplayRoute();
   }
 
-  calculateAndDisplayRoute(directionsService, directionsRenderer) {
-    directionsService.route({
+  /** @method calculateAndDisplayRoute
+      @param none
+      Calculates directions and displays route on the map
+   */
+  calculateAndDisplayRoute() {
+    this.directionsService.route({
       origin: this.startLatLng,
       destination: this.endLatLng,
+      waypoints: this.waypoints,
       travelMode: 'DRIVING'
     }, (response, status) => {
       if (status == 'OK') {
-        directionsRenderer.setDirections(response);
+        this.directionsRenderer.setDirections(response);
       } else {
         window.alert('Directions request failed due to ' + status);
       }

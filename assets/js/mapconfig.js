@@ -1,3 +1,8 @@
+/** @constant
+    @type {array}
+    @default
+    Holds the configuration options for the Google Map Object
+ */
 const mapStyles = [
   {
     "featureType": "water",
