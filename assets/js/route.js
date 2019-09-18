@@ -102,7 +102,6 @@ class Route {
           event.preventDefault();
           $(event.currentTarget).text();
         });
-
     }
     else{
       card.appendTo('.card__Container');
