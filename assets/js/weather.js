@@ -34,7 +34,21 @@ class Weather {
     const weatherIcon = this.currentWeather.icon;
     const endLocation = this.locationName;
 
-    console.log('Daily Data', this.dailyWeather);
-    console.log('Current Weather', this.currentWeather);
+    const summaryDiv = $('<div>', {
+      class: 'places__FitlerWeather-Current',
+      text: weatherSummary
+    })
+
+    const currentWeatherDiv = $('<div>', {
+      class: 'places__FilterWeather-Today',
+      text: weatherNow
+    })
+
+    const logoDiv = $('<div>', {
+      class: 'places__FilterWeather-Logo',
+      text: weatherIcon
+    })
+    
+    $('#places__FilterWeather').append(summaryDiv, currentWeatherDiv, logoDiv);
   }
 }
