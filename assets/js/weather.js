@@ -1,3 +1,7 @@
+/** Class represents the weather at a given location */
+/** Constructor initializes necessary properties and calls precessWeatherData method
+      @param {object} location - Contains location information at a lat & lng
+   */
 class Weather {
   constructor(locationArray) {
     this.locationArray = locationArray;
@@ -10,6 +14,11 @@ class Weather {
     this.currentWeather = {}
     this.processWeatherData();
   }
+
+  /** @method processWeatherData
+      @param none
+      Queries weather data form Dark Sky API
+   */
   processWeatherData() {
     console.log(this.locationArray);
     let locationLat = this.locationArray[this.currentIndex].geometry.location.lat();
@@ -18,6 +27,8 @@ class Weather {
       method: 'GET',
       url: `https://cors-anywhere.herokuapp.com/https://api.darksky.net/forecast/c8c585560e5f64a47e3b64cd50e74e26/${locationLat},${locationLng}`,
       success: (weather)=>{
+        const locationName = this.locationArray[this.currentIndex].address_components[0].long_name;
+        $(`#places__Accordion-Weather${this.currentIndex}`).before(locationName);
         this.dailyWeather = weather.daily;
         this.currentWeather = weather.currently;
         this.renderWeatherData();
@@ -32,9 +43,18 @@ class Weather {
     }
     $.ajax(weatherData);
   }
+
+  /** @method obtainWeatherData
+      @param {object} weather - Contains pertinent weather data
+   */
   obtainWeatherData(weather) {
     this.renderWeatherData();
   }
+
+  /** @method renderWeatherData
+      @param none
+      Renders all weather data to the DOM
+   */
   renderWeatherData() {
     console.log(this.dailyWeather);
     console.log(this.currentWeather);
@@ -42,7 +62,6 @@ class Weather {
     const weatherNow = this.currentWeather.apparentTemperature;
     const weatherIcon = this.currentWeather.icon;
     let weatherLogo = null;
-    const locationName = this.locationArray[this.currentIndex].address_components[0].long_name;
 
     // const summaryDiv = $('<div>', {
     //   class: 'places__FilterWeather-Current',
@@ -98,8 +117,9 @@ class Weather {
         weatherLogo = $('<i>').addClass('wi wi-na weatherIcon');
         break;
     }
-    $(`#places__Accordion-Name${this.currentIndex}`).text(locationName).append(weatherLogo);
-    $(`#places__Accordion-Weather${this.currentIndex}`).text(`Current Weather: ${weatherNow} &#8457;`);
+    // $(`#places__Accordion-Name${this.currentIndex}`).append(locationName).append(weatherLogo);
+    $(`#places__Accordion-Name${this.currentIndex}`).append(weatherLogo);
+    $(`#places__Accordion-Weather${this.currentIndex}`).text(`Current Weather: ${weatherNow}`).append('\u2109');
     // summaryDiv.append(summarySpan);
     // $('.places__FilterWeather').append(summaryDiv, currentWeatherDiv, logoDiv);
   }
