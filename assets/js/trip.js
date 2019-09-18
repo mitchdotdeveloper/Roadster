@@ -4,13 +4,11 @@ class Trip{
       @param {object} locations - Contains start and end locations
    */
   constructor(locations){
-    this.waypoints = [];
-    this.map = null;
-    this.startLocation = locations.start;
-    this.endLocation = locations.end;
-
     this.routeCallback = this.routeCallback.bind(this);
     this.placesCallback = this.placesCallback.bind(this);
+
+    this.map = null;
+    this.waypoints = [];
 
     this.route = new Route(locations, this.routeCallback);
     this.renderRoute();
@@ -26,7 +24,10 @@ class Trip{
     this.map = map;
     this.places = new Place(this.map, this.waypoints, this.placesCallback);
     this.weather = new Weather(this.waypoints);
-    this.renderEntirePlace(); // Render places page once
+
+    // Render places page once
+    this.renderEntirePlace();
+
     $('#accordion').accordion({
       heightStyle: 'content',
       animate: {
@@ -59,9 +60,4 @@ class Trip{
     this.places.renderPlacesPage();
     this.places.fetchNearbyPlaces();
   }
-
-
-  // renderWeather() {
-  //   this.weather.processWeatherData();
-  // }
 }
