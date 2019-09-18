@@ -23,15 +23,19 @@ class Route {
     this.tripCallback(this.waypoints , this.map );
   }
   createWaypoint(event){
-    // FIX THIS VV
-    $($(event.currentTarget).parent()[0].parentElement).parent().remove();
-    let latLng = {
-      lat: this.wayPointQueue.geometry.location.lat(),
-      lng: this.wayPointQueue.geometry.location.lng(),
+    let card = $(event.currentTarget).parent().parent();
+
+    if (this.wayPointQueue !== null) {
+      let latLng = {
+        lat: this.wayPointQueue.geometry.location.lat(),
+        lng: this.wayPointQueue.geometry.location.lng(),
+      }
+      card.text(this.wayPointQueue.name);
+      this.wayPointQueue = null;
+      this.waypoints.push(latLng);
+    } else {
+      card.parent().remove();
     }
-    this.createLocationCard(this.wayPointQueue);
-    this.wayPointQueue = null;
-    this.waypoints.push(latLng);
 
     // Rerender route
     // let directionsRenderer = new google.maps.DirectionsRenderer;
