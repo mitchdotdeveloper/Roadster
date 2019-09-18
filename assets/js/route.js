@@ -6,48 +6,57 @@ class Route {
       @param {callback} tripCallback - Used to pass array of location objects back to the Trip object
    */
   constructor(locations, tripCallback) {
-    this.startLocation = locations.start;
-    this.endLocation = locations.end;
-    this.startLatLng = { lat: this.startLocation.geometry.location.lat(),
-                         lng: this.startLocation.geometry.location.lng() }
-    this.endLatLng = { lat: this.endLocation.geometry.location.lat(),
-                       lng: this.endLocation.geometry.location.lng() };
-
-    this.waypoints = [];
-    this.wayPointQueue = null;
-    this.map = null;
-    this.tripCallback = tripCallback;
     this.onConfirm = this.onConfirm.bind(this);
     this.createWaypoint = this.createWaypoint.bind(this)
     this.createLocationCard = this.createLocationCard.bind(this);
     this.sortWaypoints = this.sortWaypoints.bind(this);
+
+    this.map = null;
     this.directionsRenderer = null;
     this.directionsService = null;
+    this.waypoints = [];
+    this.wayPointQueue = null;
+
+    this.startLocation = locations.start;
+    this.endLocation = locations.end;
     this.waypoints.unshift({ location: this.startLocation, });
     this.waypoints.push({ location: this.endLocation });
+
+    this.startLatLng = {
+      lat: this.startLocation.geometry.location.lat(),
+      lng: this.startLocation.geometry.location.lng()
+    }
+    this.endLatLng = {
+      lat: this.endLocation.geometry.location.lat(),
+      lng: this.endLocation.geometry.location.lng()
+    };
+
+    this.tripCallback = tripCallback;
   }
 
   /** @method onConfirm
       @param none
       When the user has selected all locations - pass array of location objects to the Trips object
    */
-  onConfirm () {
-    this.tripCallback(this.waypoints , this.map );
+  onConfirm() {
+    this.tripCallback(this.waypoints, this.map);
   }
 
   /** @method createWaypoint
       @param {event} event - The 'plus' button that is clicked to add a waypoint
       Adds waypoint to property that contains all of the selected waypoints and renders new waypoint to the DOM
    */
-  createWaypoint(event){
+  createWaypoint(event) {
     let card = $(event.currentTarget).parent().parent();
 
     if (this.wayPointQueue !== null) {
       card.text(this.wayPointQueue.name);
-      card.parent().attr('data-lat', this.wayPointQueue.geometry.location.lat());
-      this.waypoints.splice(this.waypoints.length-1, 0, { location: this.wayPointQueue });
+
+      // insert waypoint at second to last location in array
+      this.waypoints.splice(this.waypoints.length - 1, 0, { location: this.wayPointQueue });
+
       this.wayPointQueue = null;
-      this.directionsRenderer.setMap(this.map);
+
       this.calculateAndDisplayRoute();
     } else {
       card.parent().remove();
@@ -58,13 +67,13 @@ class Route {
       @param {object} element - Contains DOM object
       Creates autocomplete object
    */
-  autoComplete(element){
+  autoComplete(element) {
     let autocomplete = new google.maps.places.Autocomplete(
       element, { types: ['geocode'] }
     );
 
     autocomplete.addListener('place_changed', () => {
-       this.wayPointQueue = autocomplete.getPlace();
+      this.wayPointQueue = autocomplete.getPlace();
     });
   }
 
@@ -72,38 +81,38 @@ class Route {
       @param {object} location - Contains information about givent location
       Create and append location card to the DOM
    */
-  createLocationCard(location){
+  createLocationCard(location) {
     let card = $('<div>').addClass('overlay__Card');
     let title = $('<div>').addClass('title');
-    let form = null;
-    if(location.hasOwnProperty('name')){
+    let input = null;
+
+    if (location.hasOwnProperty('name')) {
       title.text(location.name);
-      card.attr('data-lat', location.geometry.location.lat());
     }
-    else{
-      form = document.createElement('input');
-      form.setAttribute('type', 'text');
-      title.append(
-        $('<form>')
-        .append($('<button>')
-          .attr('type', 'submit')
-          .html('<i class="fas fa-plus-circle fa-2x"></i>')
-          .on('click', this.createWaypoint))
-        .append($(form)
-        ));
-      this.autoComplete(form);
+    else {
+      // using vanilla JS to use google autocomplete
+      input = document.createElement('input');
+      input.setAttribute('type', 'text');
+      this.autoComplete(input);
+
+      let button = $('<button>')
+        .attr('type', 'submit')
+        .html('<i class="fas fa-plus-circle fa-2x"></i>')
+        .on('click', this.createWaypoint);
+
+      let form = $('<form>').append(button, input)
+
+      title.append(form);
+
     }
+
     card.append(title);
 
-    if($('.overlay__Card').length > 3){
-      card
-        .insertBefore('.card__Container > .overlay__Card:nth-last-child(1)')
-        .on('submit', event => {
-          event.preventDefault();
-          $(event.currentTarget).text();
-        });
+    if ($('.card__Container > .overlay__Card').length >= 2) {
+      // Insert card before the last card
+      card.insertBefore('.card__Container > .overlay__Card:nth-last-child(1)');
     }
-    else{
+    else {
       card.appendTo('.card__Container');
     }
 
@@ -113,53 +122,54 @@ class Route {
       @param none
       Display initial map and card overlay
    */
-  render () {
+  render() {
     $('.main').empty();
     const logo = $('<div>').addClass('logo').text('ROADSTER');
     const mapContainer = $('<div>').addClass('map__Container');
     const map = $('<div>').attr('id', 'map');
     const overlay = $('<div>').addClass('map__Overlay');
 
-    const stopHeading = $('<div>')
-                            .addClass('stops')
-                            .text("Your Route");
+    const routeHeading = $('<div>').addClass('stops')
+                                   .text("Your Route");
 
-    const addCard = $('<div>')
-                        .addClass('overlay__Card add__Button')
-                        .html('<i class="fa fa-plus"></i>')
-                        .on('click', this.createLocationCard);
-
-    const cardContainer = $('<div>')
-                              .addClass('card__Container');
-
-    const confirmButton = $('<div>')
-                              .addClass('overlay__Card confirm')
-                              .text('Confirm')
-                              .on('click', this.onConfirm);
-
-    overlay.append(
-        stopHeading,
-        cardContainer,
-        addCard,
-        confirmButton
-        );
-
-    mapContainer.append(overlay, map);
-    $('.main').append(logo, mapContainer);
+    const cardContainer = $('<div>').addClass('card__Container');
     cardContainer.sortable({
       stop: this.sortWaypoints,
     });
+
+    const addCardButton = $('<div>').addClass('overlay__Card add__Button')
+                                    .html('<i class="fa fa-plus"></i>')
+                                    .on('click', this.createLocationCard);
+
+    const confirmButton = $('<div>').addClass('overlay__Card confirm')
+                                    .text('Confirm')
+                                    .on('click', this.onConfirm);
+
+    overlay.append(
+      routeHeading,
+      cardContainer,
+      addCardButton,
+      confirmButton
+    );
+
+    mapContainer.append(overlay, map);
+
+    $('.main').append(logo, mapContainer);
+
     this.createLocationCard(this.startLocation);
     this.createLocationCard(this.endLocation);
     this.initMap();
   }
-  sortWaypoints(){
-    // debugger;
+  /** @method sortWaypoints
+      @param none
+      Sorts waypoints based on DOM route order
+  */
+  sortWaypoints() {
     let cards = $('.card__Container > .overlay__Card');
-    let newWaypoints = []
-    for(let i = 0; i < cards.length; i++){
-      for(let j = 0; j < this.waypoints.length; j++){
-        if (this.waypoints[j].location.name === $(cards[i]).text()){
+
+    for (let i = 0; i < cards.length; i++) {
+      for (let j = 0; j < this.waypoints.length; j++) {
+        if (this.waypoints[j].location.name === $(cards[i]).text()) {
           let temp = this.waypoints[i];
           this.waypoints[i] = this.waypoints[j];
           this.waypoints[j] = temp;
@@ -167,8 +177,7 @@ class Route {
         }
       }
     }
-    this.directionsService = new google.maps.DirectionsService;
-    this.directionsRenderer.setMap(this.map);
+
     this.calculateAndDisplayRoute();
   }
 
@@ -179,6 +188,7 @@ class Route {
   initMap() {
     this.directionsRenderer = new google.maps.DirectionsRenderer;
     this.directionsService = new google.maps.DirectionsService;
+
     this.map = new google.maps.Map(document.getElementById('map'), {
       zoom: 7,
       center: this.startLatLng,
@@ -197,12 +207,15 @@ class Route {
   calculateAndDisplayRoute() {
 
     let latLngArr = [];
-    for (let waypoint of this.waypoints){
+    for (let waypoint of this.waypoints) {
       latLngArr.push(
-        { location:
-          { lat: waypoint.location.geometry.location.lat(),
-            lng: waypoint.location.geometry.location.lng()}
-          });
+        {
+          location:
+          {
+            lat: waypoint.location.geometry.location.lat(),
+            lng: waypoint.location.geometry.location.lng()
+          }
+        });
     }
 
     this.directionsService.route({

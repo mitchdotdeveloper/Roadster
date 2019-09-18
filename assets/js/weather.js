@@ -4,11 +4,10 @@
    */
 class Weather {
   constructor(locationArray) {
-    this.locationArray = locationArray;
-    console.log(this.locationArray);
     this.renderWeatherData = this.renderWeatherData.bind(this);
-    this.obtainWeatherData = this.obtainWeatherData.bind(this);
-    this.location = [];
+
+    this.locationArray = locationArray;
+
     this.currentIndex = 1;
     this.dailyWeather = {};
     this.currentWeather = {}
@@ -20,20 +19,20 @@ class Weather {
       Queries weather data form Dark Sky API
    */
   processWeatherData() {
-    console.log(this.locationArray);
     let locationLat = this.locationArray[this.currentIndex].location.geometry.location.lat();
     let locationLng = this.locationArray[this.currentIndex].location.geometry.location.lng();
+
     const weatherData = {
       method: 'GET',
       url: `https://cors-anywhere.herokuapp.com/https://api.darksky.net/forecast/c8c585560e5f64a47e3b64cd50e74e26/${locationLat},${locationLng}`,
-      success: (weather)=>{
+      success: (weather) => {
         const locationName = this.locationArray[this.currentIndex].location.address_components[0].long_name;
         $(`#places__Accordion-Weather${this.currentIndex}`).before(locationName);
         this.dailyWeather = weather.daily;
         this.currentWeather = weather.currently;
         this.renderWeatherData();
         this.currentIndex++;
-        if(this.locationArray[this.currentIndex]){
+        if (this.locationArray[this.currentIndex]) {
           this.processWeatherData();
         }
       },
@@ -41,46 +40,19 @@ class Weather {
         console.log(error)
       }
     }
+
     $.ajax(weatherData);
-  }
 
-  /** @method obtainWeatherData
-      @param {object} weather - Contains pertinent weather data
-   */
-  obtainWeatherData(weather) {
-    this.renderWeatherData();
   }
-
   /** @method renderWeatherData
       @param none
       Renders all weather data to the DOM
    */
   renderWeatherData() {
-    console.log(this.dailyWeather);
-    console.log(this.currentWeather);
-    const weatherSummary = this.dailyWeather.summary;
     const weatherNow = this.currentWeather.apparentTemperature;
     const weatherIcon = this.currentWeather.icon;
+
     let weatherLogo = null;
-
-    // const summaryDiv = $('<div>', {
-    //   class: 'places__FilterWeather-Current',
-    // })
-
-    // const summarySpan = $('<span>', {
-    //   class: 'indicatorScroll',
-    //   text: weatherSummary
-    // })
-
-    // const currentWeatherDiv = $('<div>', {
-    //   class: 'places__FilterWeather-Today',
-    //   text: weatherNow
-    // })
-
-    // const logoDiv = $('<div>', {
-    //   class: 'places__FilterWeather-Logo',
-    //   text: weatherIcon
-    // })
 
     switch (weatherIcon) {
       case 'clear-day':
@@ -117,10 +89,8 @@ class Weather {
         weatherLogo = $('<i>').addClass('wi wi-na weatherIcon');
         break;
     }
-    // $(`#places__Accordion-Name${this.currentIndex}`).append(locationName).append(weatherLogo);
+
     $(`#places__Accordion-Name${this.currentIndex}`).append(weatherLogo);
     $(`#places__Accordion-Weather${this.currentIndex}`).text(`Current Weather: ${weatherNow}`).append('\u2109');
-    // summaryDiv.append(summarySpan);
-    // $('.places__FilterWeather').append(summaryDiv, currentWeatherDiv, logoDiv);
   }
 }
