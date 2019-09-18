@@ -102,7 +102,6 @@ class Route {
           event.preventDefault();
           $(event.currentTarget).text();
         });
-
     }
     else{
       card.appendTo('.card__Container');
@@ -123,7 +122,7 @@ class Route {
 
     const stopHeading = $('<div>')
                             .addClass('stops')
-                            .text("Your Route:");
+                            .text("Your Route");
 
     const addCard = $('<div>')
                         .addClass('overlay__Card add__Button')
