@@ -35,7 +35,7 @@ class Place {
     let request = {
       location: locationObjToSearch,
       radius: radius,
-      type: ['restaurant']
+      type: [placeTypes[1]]
     };
 
     console.log('fetchNearbyPlaces:', locationObjToSearch, request);
@@ -88,7 +88,35 @@ class Place {
   }
 
   renderPlacesPage() {
-    $('.main').empty();
+    const placesDOM =
+    $(`
+    <div class="places__Container">
+        <div class="places__LogoContainer">
+          <h2 class="interstate-bold">ROADSTER</h2>
+        </div>
+        <div class="places__FilterContainer">
+          <div class="places__FilterButtons">
+            <div class="places__filterButtons-Restaurant">
+              <button class="btn btn--white" id="placesRestaurant">Restaurant</button>
+            </div>
+            <div class="places__FilterButtons-Hotels">
+              <button class="btn btn--white" id="placesHotel">Hotels</button>
+            </div>
+            <div class="places__FilterButtons-Other">
+              <button class="btn btn--white" id="placesOther">Other</button>
+            </div>
+          </div>
+          <div class="places__FilterWeather">
+          </div>
+        </div>
+        <div class="places__ListContainer">
+        </div>
+        <div class="places__Confirm">
+          <button class="btn btn--green" >Confirm</button>
+        </div>
+      </div>
+    `);
+    $('.main').empty().append(placesDOM);
   }
 
   selectPlaceResult() {

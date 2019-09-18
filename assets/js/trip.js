@@ -27,6 +27,7 @@ class Trip{
   }
   renderPlaces() {
     this.places.fetchNearbyPlaces();
+    this.places.renderPlacesPage();
   }
   // renderWeather() {
   //   this.weather.processWeatherData();
