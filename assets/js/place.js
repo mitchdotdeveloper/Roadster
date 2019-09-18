@@ -3,7 +3,7 @@ class Place {
   /** Constructor stores arguments and creates Google Places object
       @param {object} mapObject - The Google Maps Map object
       @param {object} location - An object containing location information on a place
-      @param {callbackFunction} tripCallback - Used to pass array of places back to the Trip object
+      @param {callback} tripCallback - Used to pass array of places back to the Trip object
    */
   constructor(mapObject, location, tripCallback) {
     //Store data

@@ -1,7 +1,7 @@
 /** @method $
     @param {document} document
     @method ready
-    @param {callbackFunction} init
+    @param {callback} init
     Calls given callback function when document is loaded
  */
 $(document).ready(init)
