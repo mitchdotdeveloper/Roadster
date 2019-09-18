@@ -7,7 +7,7 @@ class Route {
     this.endLatLng = { lat: this.endLocation.geometry.location.lat(),
                        lng: this.endLocation.geometry.location.lng() };
 
-    this.waypoints = [];
+    this.waypoints = [this.startLatLng, this.endLatLng];
     this.map = null;
     this.tripCallback = tripCallback;
     this.onConfirm = this.onConfirm.bind(this);
@@ -21,9 +21,41 @@ class Route {
   }
   createLocationCard(location){
     let card = $('<div>').addClass('overlay__Card');
-    let title = $('<div>').addClass('title').text(location.name);
+    let title = $('<div>').addClass('title');
+    let form = null;
+    console.log(location);
+    if(location.hasOwnProperty('name')){
+      console.log('Has lat')
+      title.text(location.name);
+    }
+    else{
+      console.log('doesnt have lat');
+      form = document.createElement('input');
+      form.setAttribute('type', 'text');
+      title.append(
+        $('<form>')
+        .append($('<button>')
+          .attr('type', 'submit')
+          .html('<i class="fas fa-plus-circle fa-2x"></i>'))
+        .append($(form)
+        ));
+    }
     card.append(title);
-    return card
+
+    if($('.overlay__Card').length > 3){
+      card
+        .insertBefore('.card__Container > .overlay__Card:nth-last-child(2)')
+        .on('submit', event => {
+          event.preventDefault();
+          $(event.currentTarget).text();
+        });
+        console.log(form);
+      initAutocomplete(form);
+    }
+    else{
+      card.insertBefore('.empty');
+    }
+
   }
   render () {
     $('.main').empty();
@@ -31,14 +63,14 @@ class Route {
     const mapContainer = $('<div>').addClass('map__Container');
     const map = $('<div>').attr('id', 'map');
     const overlay = $('<div>').addClass('map__Overlay');
-
     const stopHeading = $('<div>')
                             .addClass('stops')
                             .text("Your Route:");
 
     const addCard = $('<div>')
                         .addClass('overlay__Card empty')
-                        .html('<i class="fa fa-plus"></i>');
+                        .html('<i class="fa fa-plus"></i>')
+                        .on('click', this.createLocationCard);
 
     const cardContainer = $('<div>')
                               .addClass('card__Container');
@@ -47,10 +79,7 @@ class Route {
                               .addClass('overlay__Card confirm')
                               .text('Confirm')
                               .on('click', this.onConfirm);
-    cardContainer.append(
-      this.createLocationCard(this.startLocation),
-      this.createLocationCard(this.endLocation),
-      addCard);
+
     overlay.append(
         stopHeading,
         cardContainer,
@@ -59,6 +88,9 @@ class Route {
 
     mapContainer.append(overlay, map);
     $('.main').append(logo, mapContainer);
+    cardContainer.append(addCard);
+    this.createLocationCard(this.startLocation);
+    this.createLocationCard(this.endLocation);
     this.initMap();
   }
 

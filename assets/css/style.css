@@ -268,6 +268,30 @@ body {
   height:78%;
   overflow-y: scroll;
 }
+.overlay__Card input[type='text']{
+  height:100%;
+  width:80%;
+  background:none;
+  border:none;
+  font-size:2rem;
+  color:white;
+  border-bottom:1px solid white;
+}
+
+.overlay__Card button{
+  color:white;
+  padding:5px;
+  background:none;
+  border:none;
+}
+/* .overlay__Card form{
+  height:100%;
+  width:100%;
+}
+.overlay__Card .title{
+  height:100%;
+  width:100%;
+} */
 
 /*******************************
           PLACES

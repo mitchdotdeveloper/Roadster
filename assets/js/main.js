@@ -9,6 +9,7 @@ function init(){
   $('#searchBoxGo').on('click', startTrip);
 }
 let trip;
+
 function startTrip(event){
   if (!state.start || !state.end) return;
   event.preventDefault();
