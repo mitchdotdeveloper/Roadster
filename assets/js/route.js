@@ -26,19 +26,22 @@ class Route {
   }
 
   createWaypoint(event){
-    // FIX THIS VV
-    $($(event.currentTarget).parent()[0].parentElement).parent().remove();
-    let latLng = {
-      lat: this.wayPointQueue.geometry.location.lat(),
-      lng: this.wayPointQueue.geometry.location.lng(),
-    }
-    this.createLocationCard(this.wayPointQueue);
-    this.wayPointQueue = null;
-    this.waypoints.push({location: latLng});
-    console.log(this.waypoints);
+    let card = $(event.currentTarget).parent().parent();
 
-    this.directionsRenderer.setMap(this.map);
-    this.calculateAndDisplayRoute();
+    if (this.wayPointQueue !== null) {
+      let latLng = {
+        lat: this.wayPointQueue.geometry.location.lat(),
+        lng: this.wayPointQueue.geometry.location.lng(),
+      }
+      card.text(this.wayPointQueue.name);
+      this.wayPointQueue = null;
+      this.waypoints.push({ location: latLng });
+
+      this.directionsRenderer.setMap(this.map);
+      this.calculateAndDisplayRoute();
+    } else {
+      card.parent().remove();
+    }
   }
 
   autoComplete(element){
