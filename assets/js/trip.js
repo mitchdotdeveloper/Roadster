@@ -29,7 +29,7 @@ class Trip{
     this.renderEntirePlace();
 
     $('#accordion').accordion({
-      heightStyle: 'fill',
+      heightStyle: 'content',
       animate: {
         easing: 'linear',
         duration: 100
