@@ -325,11 +325,11 @@ body {
 .places__FilterWeather-Current {
   height: 100%;
   width: 70%;
-
   display: flex;
   justify-content: flex-start;
   align-items: center;
-  font-size: 3rem;
+  font-size: 3.5rem;
+  white-space: nowrap;
   overflow: hidden;
 }
 
@@ -459,4 +459,21 @@ body {
 }
 .btn--green::after {
   background-color: #52de97;
+}
+
+/*******************************
+          ANIMATION
+*******************************/
+.indicatorScroll {
+  animation: scroll 12s linear infinite;
+}
+
+
+@keyframes scroll {
+  0% {
+    transform: translateX(60%);
+  }
+  100% {
+    transform: translateX(-100%);
+  }
 }
