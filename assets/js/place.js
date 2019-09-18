@@ -11,7 +11,7 @@ class Place {
     this.waypointsArray = waypointsArray;
     this.tripCallback = tripCallback;
     this.currentWaypoint = null;
-    // this.selectedPlaces = [];
+    this.selectedPlaces = [];
 
     //Create Google Places Service object
     this.placesServiceObj = new google.maps.places.PlacesService(this.mapObject);
@@ -19,22 +19,19 @@ class Place {
     //Bind methods
     this.addResultsToList = this.addResultsToList.bind(this);
     this.accordionClickHandler = this.accordionClickHandler.bind(this);
-    // this.restaurantButtonHandler = this.restaurantButtonHandler.bind(this);
-    // this.hotelButtonHandler = this.hotelButtonHandler.bind(this);
-    // this.otherButtonHandler = this.otherButtonHandler.bind(this);
+    this.placeResultClickHandler = this.placeResultClickHandler.bind(this);
 
     //Delete this section
     console.log('New Place obj created:', this, this.waypointsArray);
   }
 
-  // /** @method onConfirm
-  //     @param none
-  //     Passes selected places back to Trip object
-  //  */
-  // onConfirm() {
-  //   //Pass selectedPlaces array back to Trip class
-  //   this.tripCallback(this.selectedPlaces);
-  // }
+  /** @method onConfirm
+      @param none
+      Passes selected places back to Trip object
+   */
+  onConfirm() {
+    this.tripCallback(this.selectedPlaces);
+  }
 
 /** @method fetchNearbyPlaces
     @param none
@@ -42,6 +39,7 @@ class Place {
  */
   fetchNearbyPlaces(waypoint = this.waypointsArray[1], placeType = 'restaurant') {
     this.currentWaypoint = waypoint;
+    this.currentWaypoint.fetchedData = true;
     const radius = '15000';
     const validPlaceTypes = ['restaurant', 'lodging', 'natural_feature'];
     if (!validPlaceTypes.includes(placeType)) {
@@ -85,7 +83,7 @@ class Place {
     if (searchStatus !== 'OK') {
       return false;
     }
-    for (let resultIndex = 0; resultIndex < 5; resultIndex++) {
+    for (let resultIndex = 0; resultIndex < 8; resultIndex++) {
       this.fetchInfoForSearchResult(searchResults[resultIndex]);
     }
   }
@@ -159,12 +157,19 @@ class Place {
 
   addClickHandlers() {
     $('.places__Accordion-Name').on('click', this.accordionClickHandler);
+    $('#accordion').on('click', '.places__ListItem', this.placeResultClickHandler);
   }
 
   accordionClickHandler(event) {
-    $('.places__AccordionContainer').empty();
-    let currentAccordionID = $(event.currentTarget).attr('id').slice(-1);
-    this.fetchNearbyPlaces(this.waypointsArray[currentAccordionID], 'restaurant');
+    let clickedWaypointIndex = $(event.currentTarget).attr('id').slice(-1);
+    if (this.waypointsArray[clickedWaypointIndex].fetchedData) {
+      return false;
+    }
+    this.fetchNearbyPlaces(this.waypointsArray[clickedWaypointIndex], 'restaurant');
+  }
+
+  placeResultClickHandler(event) {
+    $(event.currentTarget).toggleClass('selected');
   }
 
 }
