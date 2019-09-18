@@ -28,7 +28,7 @@ class Trip{
     this.weather = new Weather(this.waypoints);
     this.renderEntirePlace(); // Render places page once
     $('#accordion').accordion({
-      heightStyle: 'fill',
+      heightStyle: 'content',
       animate: {
         easing: 'linear',
         duration: 100
