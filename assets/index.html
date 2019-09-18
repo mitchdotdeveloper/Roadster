@@ -9,10 +9,15 @@
     <!-- Fonts -->
     <link rel="stylesheet" href="https://use.typekit.net/fjk8vsw.css">
     <!-- End fonts -->
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
     <link rel="stylesheet" href="css/style.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<<<<<<< HEAD
     <script src="https://code.jquery.com/ui/1.12.0/jquery-ui.min.js"
       integrity="sha256-eGE6blurk5sHj+rmkfsGYeKyZx3M4bG+ZlFyA7Kns7E=" crossorigin="anonymous"></script>
+=======
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+>>>>>>> 3d72011ed542ab9172c050222609c0fbad25541e
     <script src="js/mapconfig.js"></script>
     <script src="js/route.js"></script>
     <script src="js/weather.js"></script>
@@ -65,35 +70,62 @@
         <div class="places__LogoContainer">
           <h2 class="interstate-bold">ROADSTER</h2>
         </div>
-        <div class="places__FilterContainer">
-          <div class="places__FilterButtons">
-            <div class="places__filterButtons-Restaurant">
-              <button class="btn btn--white" id="placesRestaurant">Restaurant</button>
-            </div>
-            <div class="places__FilterButtons-Hotels">
-              <button class="btn btn--white" id="placesHotel">Hotels</button>
-            </div>
-            <div class="places__FilterButtons-Other">
-              <button class="btn btn--white" id="placesOther">Other</button>
-            </div>
-          </div>
-          <div class="places__FilterWeather">
-            <div class="places__FilterWeather-Current">
-              alskdjf;laskdjf;laksdjf;lakjsdf;lkajsdf;lkajsdf;lkajsdf;lkjasd;flkjasdf;lkj
-            </div>
-            <div class="places__FilterWeather-Today">
-              79
-            </div>
-            <div class="places__FilterWeather-Logo">
-              LOGO
-            </div>
-          </div>
-        </div>
         <div class="places__ListContainer">
-          <div class="places__ListItem interstate-light">
-            <div class="places__ListItem-Name">Mastros</div>
-            <div class="places__ListItem-Address"> Addresss</div>
-            <div class="places__ListItem-Rating"> 4.9 out of 5 stars</div>
+          <div class="places__ListContainer-Accordion interstate-light" id="accordion">
+            <h1 class="places__Accordion-Name">Las Vegas <span class=places__Accordion-Weather>Current Weather: 79&#8457; </span></h1>
+            <div class="places__AccordionContainer">
+              <div class="places__ListItem">
+                <div class="places__ListItem-Name">Mastros</div>
+                <div class="places__ListItem-Address"> Addresss</div>
+                <div class="places__ListItem-Rating"> 4.9 out of 5 stars</div>
+              </div>
+              <div class="places__ListItem">
+                <div class="places__ListItem-Name">Mastros</div>
+                <div class="places__ListItem-Address"> Addresss</div>
+                <div class="places__ListItem-Rating"> 4.9 out of 5 stars</div>
+              </div>
+              <div class="places__ListItem">
+                <div class="places__ListItem-Name">Mastros</div>
+                <div class="places__ListItem-Address"> Addresss</div>
+                <div class="places__ListItem-Rating"> 4.9 out of 5 stars</div>
+              </div>
+              <div class="places__ListItem">
+                <div class="places__ListItem-Name">Mastros</div>
+                <div class="places__ListItem-Address"> Addresss</div>
+                <div class="places__ListItem-Rating"> 4.9 out of 5 stars</div>
+              </div>
+              <div class="places__ListItem">
+                <div class="places__ListItem-Name">Mastros</div>
+                <div class="places__ListItem-Address"> Addresss</div>
+                <div class="places__ListItem-Rating"> 4.9 out of 5 stars</div>
+              </div>
+              <div class="places__ListItem">
+                <div class="places__ListItem-Name">Mastros</div>
+                <div class="places__ListItem-Address"> Addresss</div>
+                <div class="places__ListItem-Rating"> 4.9 out of 5 stars</div>
+              </div>
+              <div class="places__ListItem">
+                <div class="places__ListItem-Name">Mastros</div>
+                <div class="places__ListItem-Address"> Addresss</div>
+                <div class="places__ListItem-Rating"> 4.9 out of 5 stars</div>
+              </div>
+            </div>
+            <h1 class="places__Accordion-Name">San Fransisco <span class=places__Accordion-Weather>Current Weather: 79&#8457; </span></h1>
+            <div class="places__AccordionContainer">
+              <div class="places__ListItem">
+                <div class="places__ListItem-Name">Mastros</div>
+                <div class="places__ListItem-Address"> Addresss</div>
+                <div class="places__ListItem-Rating"> 4.9 out of 5 stars</div>
+              </div>
+            </div>
+            <h1 class="places__Accordion-Name">New York <span class=places__Accordion-Weather>Current Weather: 79&#8457; </span></h1>
+            <div class="places__AccordionContainer">
+              <div class="places__ListItem">
+                <div class="places__ListItem-Name">Mastros</div>
+                <div class="places__ListItem-Address"> Addresss</div>
+                <div class="places__ListItem-Rating"> 4.9 out of 5 stars</div>
+              </div>
+            </div>
           </div>
         </div>
         <div class="places__Confirm">
