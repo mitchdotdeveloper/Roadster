@@ -17,6 +17,7 @@ class Place {
     this.placesServiceObj = new google.maps.places.PlacesService(this.mapObject);
 
     //Bind methods
+    this.onConfirm = this.onConfirm.bind(this);
     this.addResultsToList = this.addResultsToList.bind(this);
     this.accordionClickHandler = this.accordionClickHandler.bind(this);
     this.placeResultClickHandler = this.placeResultClickHandler.bind(this);
@@ -30,7 +31,13 @@ class Place {
       Passes selected places back to Trip object
    */
   onConfirm() {
+    let selectedPlacesObj = $('.selected');
+    console.log(selectedPlacesObj);
+    for (let selectionIndex = 0; selectionIndex < selectedPlacesObj.length; selectionIndex++) {
+      this.selectedPlaces.push(selectedPlacesObj[selectionIndex].firstChild.innerHTML);
+    }
     this.tripCallback(this.selectedPlaces);
+    console.log(this.selectedPlaces);
   }
 
 /** @method fetchNearbyPlaces
@@ -83,7 +90,7 @@ class Place {
     if (searchStatus !== 'OK') {
       return false;
     }
-    for (let resultIndex = 0; resultIndex < 8; resultIndex++) {
+    for (let resultIndex = 0; resultIndex < 7; resultIndex++) {
       this.fetchInfoForSearchResult(searchResults[resultIndex]);
     }
   }
@@ -156,6 +163,7 @@ class Place {
   }
 
   addClickHandlers() {
+    $('.places__Confirm').on('click', this.onConfirm);
     $('.places__Accordion-Name').on('click', this.accordionClickHandler);
     $('#accordion').on('click', '.places__ListItem', this.placeResultClickHandler);
   }
