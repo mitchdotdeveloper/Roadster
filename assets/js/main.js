@@ -22,7 +22,7 @@ function initAutocomplete(element){
    element, {types: ['geocode']}
   );
 
-  autocomplete.addListener('place_changed', function(){
+  autocomplete.addListener('place_changed', () => {
     state[$(element).attr('data-location')] = autocomplete.getPlace();
   });
 }

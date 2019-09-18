@@ -7,38 +7,68 @@ class Route {
     this.endLatLng = { lat: this.endLocation.geometry.location.lat(),
                        lng: this.endLocation.geometry.location.lng() };
 
-    this.waypoints = [this.startLatLng, this.endLatLng];
+    this.waypoints = [];
+    this.wayPointQueue = null;
     this.map = null;
     this.tripCallback = tripCallback;
     this.onConfirm = this.onConfirm.bind(this);
+    this.createWaypoint = this.createWaypoint.bind(this)
+    this.createLocationCard = this.createLocationCard.bind(this);
+    this.directionsRenderer = null;
+    this.directionsService = null;
 
   }
 
   onConfirm () {
     this.waypoints.unshift( this.startLocation );
     this.waypoints.push( this.endLocation );
-    this.tripCallback( this.waypoints , this.map );
+    this.tripCallback(this.waypoints , this.map );
+  }
+
+  createWaypoint(event){
+    // FIX THIS VV
+    $($(event.currentTarget).parent()[0].parentElement).parent().remove();
+    let latLng = {
+      lat: this.wayPointQueue.geometry.location.lat(),
+      lng: this.wayPointQueue.geometry.location.lng(),
+    }
+    this.createLocationCard(this.wayPointQueue);
+    this.wayPointQueue = null;
+    this.waypoints.push({location: latLng});
+    console.log(this.waypoints);
+
+    this.directionsRenderer.setMap(this.map);
+    this.calculateAndDisplayRoute();
+  }
+
+  autoComplete(element){
+    let autocomplete = new google.maps.places.Autocomplete(
+      element, { types: ['geocode'] }
+    );
+
+    autocomplete.addListener('place_changed', () => {
+       this.wayPointQueue = autocomplete.getPlace();
+    });
   }
   createLocationCard(location){
     let card = $('<div>').addClass('overlay__Card');
     let title = $('<div>').addClass('title');
     let form = null;
-    console.log(location);
     if(location.hasOwnProperty('name')){
-      console.log('Has lat')
       title.text(location.name);
     }
     else{
-      console.log('doesnt have lat');
       form = document.createElement('input');
       form.setAttribute('type', 'text');
       title.append(
         $('<form>')
         .append($('<button>')
           .attr('type', 'submit')
-          .html('<i class="fas fa-plus-circle fa-2x"></i>'))
+          .html('<i class="fas fa-plus-circle fa-2x"></i>')
+          .on('click', this.createWaypoint))
         .append($(form)
         ));
+      this.autoComplete(form);
     }
     card.append(title);
 
@@ -49,8 +79,7 @@ class Route {
           event.preventDefault();
           $(event.currentTarget).text();
         });
-        console.log(form);
-      initAutocomplete(form);
+
     }
     else{
       card.insertBefore('.empty');
@@ -63,6 +92,7 @@ class Route {
     const mapContainer = $('<div>').addClass('map__Container');
     const map = $('<div>').attr('id', 'map');
     const overlay = $('<div>').addClass('map__Overlay');
+
     const stopHeading = $('<div>')
                             .addClass('stops')
                             .text("Your Route:");
@@ -95,8 +125,8 @@ class Route {
   }
 
   initMap() {
-    let directionsRenderer = new google.maps.DirectionsRenderer;
-    let directionsService = new google.maps.DirectionsService;
+    this.directionsRenderer = new google.maps.DirectionsRenderer;
+    this.directionsService = new google.maps.DirectionsService;
     this.map = new google.maps.Map(document.getElementById('map'), {
       zoom: 7,
       center: this.startLatLng,
@@ -104,18 +134,19 @@ class Route {
       styles: mapStyles
     });
 
-    directionsRenderer.setMap(this.map);
-    this.calculateAndDisplayRoute(directionsService, directionsRenderer);
+    this.directionsRenderer.setMap(this.map);
+    this.calculateAndDisplayRoute();
   }
 
-  calculateAndDisplayRoute(directionsService, directionsRenderer) {
-    directionsService.route({
+  calculateAndDisplayRoute() {
+    this.directionsService.route({
       origin: this.startLatLng,
       destination: this.endLatLng,
+      waypoints: this.waypoints,
       travelMode: 'DRIVING'
     }, (response, status) => {
       if (status == 'OK') {
-        directionsRenderer.setDirections(response);
+        this.directionsRenderer.setDirections(response);
       } else {
         window.alert('Directions request failed due to ' + status);
       }
