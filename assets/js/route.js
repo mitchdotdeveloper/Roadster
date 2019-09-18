@@ -154,7 +154,6 @@ class Route {
     this.createLocationCard(this.endLocation);
     this.initMap();
   }
-<<<<<<< HEAD
   sortWaypoints(){
     // debugger;
     let cards = $('.card__Container > .overlay__Card');
@@ -173,13 +172,11 @@ class Route {
     this.directionsRenderer.setMap(this.map);
     this.calculateAndDisplayRoute();
   }
-=======
 
   /** @method initMap
       @param none
       Initializes Google Maps Map and Google Directions
    */
->>>>>>> 10805caf596265a1280486cd39aefb1ed7b3f4ef
   initMap() {
     this.directionsRenderer = new google.maps.DirectionsRenderer;
     this.directionsService = new google.maps.DirectionsService;
