@@ -21,13 +21,13 @@ class Weather {
    */
   processWeatherData() {
     console.log(this.locationArray);
-    let locationLat = this.locationArray[this.currentIndex].geometry.location.lat();
-    let locationLng = this.locationArray[this.currentIndex].geometry.location.lng();
+    let locationLat = this.locationArray[this.currentIndex].location.geometry.location.lat();
+    let locationLng = this.locationArray[this.currentIndex].location.geometry.location.lng();
     const weatherData = {
       method: 'GET',
       url: `https://cors-anywhere.herokuapp.com/https://api.darksky.net/forecast/c8c585560e5f64a47e3b64cd50e74e26/${locationLat},${locationLng}`,
       success: (weather)=>{
-        const locationName = this.locationArray[this.currentIndex].address_components[0].long_name;
+        const locationName = this.locationArray[this.currentIndex].location.address_components[0].long_name;
         $(`#places__Accordion-Weather${this.currentIndex}`).before(locationName);
         this.dailyWeather = weather.daily;
         this.currentWeather = weather.currently;
