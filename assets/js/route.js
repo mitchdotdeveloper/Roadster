@@ -1,4 +1,10 @@
+/** Class representing the Google Map and Google Direction objects */
 class Route {
+  /** Constructor initializes and defines necessary properties for the
+      Google Maps object & Google Directions object
+      @param {object} locations - Contains autocomplete location object
+      @param {callback} tripCallback - Used to pass array of location objects back to the Trip object
+   */
   constructor(locations, tripCallback) {
     this.startLocation = locations.start;
     this.endLocation = locations.end;
@@ -21,10 +27,18 @@ class Route {
     this.waypoints.push({ location: this.endLocation });
   }
 
+  /** @method onConfirm
+      @param none
+      When the user has selected all locations - pass array of location objects to the Trips object
+   */
   onConfirm () {
     this.tripCallback(this.waypoints , this.map );
   }
 
+  /** @method createWaypoint
+      @param {event} event - The 'plus' button that is clicked to add a waypoint
+      Adds waypoint to property that contains all of the selected waypoints and renders new waypoint to the DOM
+   */
   createWaypoint(event){
     let card = $(event.currentTarget).parent().parent();
 
@@ -40,6 +54,10 @@ class Route {
     }
   }
 
+  /** @method autoComplete
+      @param {object} element - Contains DOM object
+      Creates autocomplete object
+   */
   autoComplete(element){
     let autocomplete = new google.maps.places.Autocomplete(
       element, { types: ['geocode'] }
@@ -49,6 +67,11 @@ class Route {
        this.wayPointQueue = autocomplete.getPlace();
     });
   }
+
+  /** @method createLocationCard
+      @param {object} location - Contains information about givent location
+      Create and append location card to the DOM
+   */
   createLocationCard(location){
     let card = $('<div>').addClass('overlay__Card');
     let title = $('<div>').addClass('title');
@@ -86,6 +109,11 @@ class Route {
     }
 
   }
+
+  /** @method render
+      @param none
+      Display initial map and card overlay
+   */
   render () {
     $('.main').empty();
     const logo = $('<div>').addClass('logo').text('ROADSTER');
@@ -126,6 +154,7 @@ class Route {
     this.createLocationCard(this.endLocation);
     this.initMap();
   }
+<<<<<<< HEAD
   sortWaypoints(){
     // debugger;
     let cards = $('.card__Container > .overlay__Card');
@@ -144,6 +173,13 @@ class Route {
     this.directionsRenderer.setMap(this.map);
     this.calculateAndDisplayRoute();
   }
+=======
+
+  /** @method initMap
+      @param none
+      Initializes Google Maps Map and Google Directions
+   */
+>>>>>>> 10805caf596265a1280486cd39aefb1ed7b3f4ef
   initMap() {
     this.directionsRenderer = new google.maps.DirectionsRenderer;
     this.directionsService = new google.maps.DirectionsService;
@@ -158,6 +194,10 @@ class Route {
     this.calculateAndDisplayRoute();
   }
 
+  /** @method calculateAndDisplayRoute
+      @param none
+      Calculates directions and displays route on the map
+   */
   calculateAndDisplayRoute() {
 
     let latLngArr = [];

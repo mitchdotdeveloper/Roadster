@@ -429,7 +429,7 @@ body {
 .places__ListItem-Name {
   height: 100%;
   width: 50%;
-  font-size: 5rem;
+  font-size: 4rem;
   display:flex;
   justify-content: flex-start;
   align-items: center;
@@ -460,6 +460,15 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+/*******************************
+          WEATHER ICONS
+*******************************/
+
+.weatherIcon {
+  font-size: 3rem;
+  margin-left: 2rem;
 }
 
 /*******************************
@@ -522,21 +531,4 @@ body {
 }
 .btn--green::after {
   background-color: #52de97;
-}
-
-/*******************************
-          ANIMATION
-*******************************/
-.indicatorScroll {
-  animation: scroll 12s linear infinite;
-}
-
-
-@keyframes scroll {
-  0% {
-    transform: translateX(60%);
-  }
-  100% {
-    transform: translateX(-100%);
-  }
 }
