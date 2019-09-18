@@ -1,10 +1,25 @@
+/** @method $
+    @param {document} document
+    @method ready
+    @param {callback} init
+    Calls given callback function when document is loaded
+ */
 $(document).ready(init)
 
+/** @constant
+    @type {string}
+    @default
+    Holds the start and end destination autocomplete object
+ */
 const state = {
   start: null,
   end: null
 };
 
+/** @function init
+    @param none
+    Add a click handler to DOM button '#searchBoxGo'
+*/
 function init(){
   $('#searchBoxGo').on('click', startTrip);
   $('#accordion').accordion({
@@ -17,6 +32,10 @@ function init(){
 }
 let trip;
 
+/** @function startTrip
+    @param {event} event
+    Limits input and creates a Trip object and renders the map
+ */
 function startTrip(event){
   if (!state.start || !state.end) return;
   event.preventDefault();
@@ -24,6 +43,10 @@ function startTrip(event){
   trip.renderRoute();
 }
 
+/** @function initAutoComplete
+    @param {element} element
+    Creates autocomplete object and adds it to the global state object
+ */
 function initAutocomplete(element){
   let autocomplete = new google.maps.places.Autocomplete(
    element, {types: ['geocode']}
@@ -34,6 +57,11 @@ function initAutocomplete(element){
   });
 }
 
+/** @function autocompleteLoad
+    @param none
+    Initializes auto complete functionality on the two input boxes
+    '#searchBoxStart' & '#searchBoxEnd'
+ */
 function autocompleteLoad(){
   initAutocomplete(document.querySelector('#searchBoxStart'));
   initAutocomplete(document.querySelector('#searchBoxEnd'));

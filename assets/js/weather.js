@@ -1,4 +1,8 @@
+/** Class represents the weather at a given location */
 class Weather {
+  /** Constructor initializes necessary properties and calls precessWeatherData method
+      @param {object} location - Contains location information at a lat & lng
+   */
   constructor(location) {
     console.log(location)
     this.renderWeatherData = this.renderWeatherData.bind(this);
@@ -12,6 +16,11 @@ class Weather {
     this.currentWeather = {}
     this.processWeatherData();
   }
+
+  /** @method processWeatherData
+      @param none
+      Queries weather data form Dark Sky API
+   */
   processWeatherData() {
     const weatherData = {
       method: 'GET',
@@ -23,11 +32,20 @@ class Weather {
     }
     $.ajax(weatherData);
   }
+
+  /** @method obtainWeatherData
+      @param {object} weather - Contains pertinent weather data
+   */
   obtainWeatherData(weather) {
     this.dailyWeather = weather.daily;
     this.currentWeather = weather.currently;
     this.renderWeatherData();
   }
+
+  /** @method renderWeatherData
+      @param none
+      Renders all weather data to the DOM
+   */
   renderWeatherData() {
     const weatherSummary = this.dailyWeather.summary;
     const weatherNow = this.currentWeather.apparentTemperature;
