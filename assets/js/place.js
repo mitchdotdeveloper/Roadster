@@ -22,9 +22,6 @@ class Place {
     // this.restaurantButtonHandler = this.restaurantButtonHandler.bind(this);
     // this.hotelButtonHandler = this.hotelButtonHandler.bind(this);
     // this.otherButtonHandler = this.otherButtonHandler.bind(this);
-
-    //Delete this section
-    console.log('New Place obj created:', this, this.waypointsArray);
   }
 
   // /** @method onConfirm
@@ -50,7 +47,6 @@ class Place {
 
     //Create Google Places Location & Request objects
     const locationDataPromise = new Promise((resolve, reject) => {
-      console.log('Getting location values now');
       let currentStopLocationData = {
         name: waypoint.location.name,
         lat: waypoint.location.geometry.location.lat(),
@@ -60,16 +56,12 @@ class Place {
     });
 
     locationDataPromise.then((currentStopLocationData) => {
-      console.log('After getting location values');
       let locationObjToSearch = new google.maps.LatLng(currentStopLocationData.lat, currentStopLocationData.lng);
       let request = {
         location: locationObjToSearch,
         radius: radius,
         type: [placeType]
       };
-
-      //Delete this section
-      console.log('fetchNearbyPlaces:', locationObjToSearch, request, arguments, currentStopLocationData);
 
       //Searches for places within 15km of location, passes array of search results to callback function
       this.placesServiceObj.nearbySearch(request, this.addResultsToList);
@@ -103,7 +95,6 @@ class Place {
         'url', 'types', 'photos', 'rating', 'user_ratings_total', 'price_level']
     };
     this.placesServiceObj.getDetails(request, function(place, status) {
-      console.log('Detailed search status:', status);
       if (status !== 'OK') {
         return false;
       }
@@ -118,8 +109,6 @@ class Place {
 
     $('#places__AccordionContainer' + (this.waypointsArray.indexOf(this.currentWaypoint))).append(placeListItem);
 
-    //Delete this section
-    console.log('fetchingInfoForSearchResult:', searchResultData);
   }
 
   /** @method renderPlacesPage
