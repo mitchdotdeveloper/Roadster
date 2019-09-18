@@ -20,9 +20,11 @@ class Route {
     this.onConfirm = this.onConfirm.bind(this);
     this.createWaypoint = this.createWaypoint.bind(this)
     this.createLocationCard = this.createLocationCard.bind(this);
+    this.sortWaypoints = this.sortWaypoints.bind(this);
     this.directionsRenderer = null;
     this.directionsService = null;
-
+    this.waypoints.unshift({ location: this.startLocation, });
+    this.waypoints.push({ location: this.endLocation });
   }
 
   /** @method onConfirm
@@ -30,8 +32,6 @@ class Route {
       When the user has selected all locations - pass array of location objects to the Trips object
    */
   onConfirm () {
-    this.waypoints.unshift( this.startLocation );
-    this.waypoints.push( this.endLocation );
     this.tripCallback(this.waypoints , this.map );
   }
 
@@ -43,14 +43,10 @@ class Route {
     let card = $(event.currentTarget).parent().parent();
 
     if (this.wayPointQueue !== null) {
-      let latLng = {
-        lat: this.wayPointQueue.geometry.location.lat(),
-        lng: this.wayPointQueue.geometry.location.lng(),
-      }
       card.text(this.wayPointQueue.name);
+      card.parent().attr('data-lat', this.wayPointQueue.geometry.location.lat());
+      this.waypoints.splice(this.waypoints.length-1, 0, { location: this.wayPointQueue });
       this.wayPointQueue = null;
-      this.waypoints.push({ location: latLng });
-
       this.directionsRenderer.setMap(this.map);
       this.calculateAndDisplayRoute();
     } else {
@@ -82,6 +78,7 @@ class Route {
     let form = null;
     if(location.hasOwnProperty('name')){
       title.text(location.name);
+      card.attr('data-lat', location.geometry.location.lat());
     }
     else{
       form = document.createElement('input');
@@ -100,7 +97,7 @@ class Route {
 
     if($('.overlay__Card').length > 3){
       card
-        .insertBefore('.card__Container > .overlay__Card:nth-last-child(2)')
+        .insertBefore('.card__Container > .overlay__Card:nth-last-child(1)')
         .on('submit', event => {
           event.preventDefault();
           $(event.currentTarget).text();
@@ -108,7 +105,7 @@ class Route {
 
     }
     else{
-      card.insertBefore('.empty');
+      card.appendTo('.card__Container');
     }
 
   }
@@ -129,7 +126,7 @@ class Route {
                             .text("Your Route:");
 
     const addCard = $('<div>')
-                        .addClass('overlay__Card empty')
+                        .addClass('overlay__Card add__Button')
                         .html('<i class="fa fa-plus"></i>')
                         .on('click', this.createLocationCard);
 
@@ -144,15 +141,36 @@ class Route {
     overlay.append(
         stopHeading,
         cardContainer,
+        addCard,
         confirmButton
         );
 
     mapContainer.append(overlay, map);
     $('.main').append(logo, mapContainer);
-    cardContainer.append(addCard);
+    cardContainer.sortable({
+      stop: this.sortWaypoints,
+    });
     this.createLocationCard(this.startLocation);
     this.createLocationCard(this.endLocation);
     this.initMap();
+  }
+  sortWaypoints(){
+    // debugger;
+    let cards = $('.card__Container > .overlay__Card');
+    let newWaypoints = []
+    for(let i = 0; i < cards.length; i++){
+      for(let j = 0; j < this.waypoints.length; j++){
+        if (this.waypoints[j].location.name === $(cards[i]).text()){
+          let temp = this.waypoints[i];
+          this.waypoints[i] = this.waypoints[j];
+          this.waypoints[j] = temp;
+          break;
+        }
+      }
+    }
+    this.directionsService = new google.maps.DirectionsService;
+    this.directionsRenderer.setMap(this.map);
+    this.calculateAndDisplayRoute();
   }
 
   /** @method initMap
@@ -178,10 +196,20 @@ class Route {
       Calculates directions and displays route on the map
    */
   calculateAndDisplayRoute() {
+
+    let latLngArr = [];
+    for (let waypoint of this.waypoints){
+      latLngArr.push(
+        { location:
+          { lat: waypoint.location.geometry.location.lat(),
+            lng: waypoint.location.geometry.location.lng()}
+          });
+    }
+
     this.directionsService.route({
-      origin: this.startLatLng,
-      destination: this.endLatLng,
-      waypoints: this.waypoints,
+      origin: latLngArr.shift(),
+      destination: latLngArr.pop(),
+      waypoints: latLngArr,
       travelMode: 'DRIVING'
     }, (response, status) => {
       if (status == 'OK') {
