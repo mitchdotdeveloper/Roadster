@@ -14,6 +14,8 @@ class Route {
     this.onConfirm = this.onConfirm.bind(this);
     this.createWaypoint = this.createWaypoint.bind(this)
     this.createLocationCard = this.createLocationCard.bind(this);
+    this.directionsRenderer = null;
+    this.directionsService = null;
 
   }
 
@@ -22,6 +24,7 @@ class Route {
     this.waypoints.push( this.endLocation );
     this.tripCallback(this.waypoints , this.map );
   }
+
   createWaypoint(event){
     let card = $(event.currentTarget).parent().parent();
 
@@ -32,15 +35,13 @@ class Route {
       }
       card.text(this.wayPointQueue.name);
       this.wayPointQueue = null;
-      this.waypoints.push(latLng);
+      this.waypoints.push({ location: latLng });
+
+      this.directionsRenderer.setMap(this.map);
+      this.calculateAndDisplayRoute();
     } else {
       card.parent().remove();
     }
-
-    // Rerender route
-    // let directionsRenderer = new google.maps.DirectionsRenderer;
-    // let directionsService = new google.maps.DirectionsService;
-    // this.calculateAndDisplayRoute(directionsRenderer, directionsService);
   }
 
   autoComplete(element){
@@ -127,8 +128,8 @@ class Route {
   }
 
   initMap() {
-    let directionsRenderer = new google.maps.DirectionsRenderer;
-    let directionsService = new google.maps.DirectionsService;
+    this.directionsRenderer = new google.maps.DirectionsRenderer;
+    this.directionsService = new google.maps.DirectionsService;
     this.map = new google.maps.Map(document.getElementById('map'), {
       zoom: 7,
       center: this.startLatLng,
@@ -136,18 +137,19 @@ class Route {
       styles: mapStyles
     });
 
-    directionsRenderer.setMap(this.map);
-    this.calculateAndDisplayRoute(directionsService, directionsRenderer);
+    this.directionsRenderer.setMap(this.map);
+    this.calculateAndDisplayRoute();
   }
 
-  calculateAndDisplayRoute(directionsService, directionsRenderer) {
-    directionsService.route({
+  calculateAndDisplayRoute() {
+    this.directionsService.route({
       origin: this.startLatLng,
       destination: this.endLatLng,
+      waypoints: this.waypoints,
       travelMode: 'DRIVING'
     }, (response, status) => {
       if (status == 'OK') {
-        directionsRenderer.setDirections(response);
+        this.directionsRenderer.setDirections(response);
       } else {
         window.alert('Directions request failed due to ' + status);
       }
