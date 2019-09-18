@@ -14,14 +14,13 @@ class Route {
     this.onConfirm = this.onConfirm.bind(this);
     this.createWaypoint = this.createWaypoint.bind(this)
     this.createLocationCard = this.createLocationCard.bind(this);
+    this.sortWaypoints = this.sortWaypoints.bind(this);
     this.directionsRenderer = null;
     this.directionsService = null;
 
   }
 
   onConfirm () {
-    this.waypoints.unshift( this.startLocation );
-    this.waypoints.push( this.endLocation );
     this.tripCallback(this.waypoints , this.map );
   }
 
@@ -77,7 +76,7 @@ class Route {
 
     if($('.overlay__Card').length > 3){
       card
-        .insertBefore('.card__Container > .overlay__Card:nth-last-child(2)')
+        .insertBefore('.card__Container > .overlay__Card:nth-last-child(1)')
         .on('submit', event => {
           event.preventDefault();
           $(event.currentTarget).text();
@@ -85,7 +84,7 @@ class Route {
 
     }
     else{
-      card.insertBefore('.empty');
+      card.appendTo('.card__Container');
     }
 
   }
@@ -101,7 +100,7 @@ class Route {
                             .text("Your Route:");
 
     const addCard = $('<div>')
-                        .addClass('overlay__Card empty')
+                        .addClass('overlay__Card add__Button')
                         .html('<i class="fa fa-plus"></i>')
                         .on('click', this.createLocationCard);
 
@@ -116,17 +115,31 @@ class Route {
     overlay.append(
         stopHeading,
         cardContainer,
+        addCard,
         confirmButton
         );
 
     mapContainer.append(overlay, map);
     $('.main').append(logo, mapContainer);
-    cardContainer.append(addCard);
+    // cardContainer.append(addCard);
+    cardContainer.sortable({
+      stop: this.sortWaypoints,
+    });
     this.createLocationCard(this.startLocation);
     this.createLocationCard(this.endLocation);
     this.initMap();
   }
-
+  sortWaypoints(){
+    this.waypoints.unshift({ location: this.startLatLng });
+    this.waypoints.push({ location: this.endLatLng });
+    let cards = $('.card__Container > .overlay__Card');
+    for(let i = 0; i < cards.length; i++){
+      // swap
+      if(this.waypoints[i].geometry.location.lat() === cards[i].attr('data-lat') ){
+        //
+      }
+    }
+  }
   initMap() {
     this.directionsRenderer = new google.maps.DirectionsRenderer;
     this.directionsService = new google.maps.DirectionsService;

@@ -229,6 +229,7 @@ body {
   font-style: normal;
 }
 .overlay__Card{
+  cursor: pointer;
   box-shadow: 1px 1px 3px rgba(0,0,0,.5);
   display:flex;
   justify-content: center;
@@ -245,10 +246,10 @@ body {
   font-family: interstate, sans-serif;
   font-weight: 300;
   font-style: normal;
-  transition: .1s ease;
+  /* transition: .1s ease; */
 
 }
-.overlay__Card.empty{
+.overlay__Card.add__Button{
   cursor: pointer;
   color:white;
   background-color:rgba(60, 157, 155, 0.7);
