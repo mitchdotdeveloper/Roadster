@@ -17,7 +17,8 @@ class Route {
     this.sortWaypoints = this.sortWaypoints.bind(this);
     this.directionsRenderer = null;
     this.directionsService = null;
-
+    this.waypoints.unshift({ location: this.startLocation, });
+    this.waypoints.push({ location: this.endLocation });
   }
 
   onConfirm () {
@@ -28,14 +29,10 @@ class Route {
     let card = $(event.currentTarget).parent().parent();
 
     if (this.wayPointQueue !== null) {
-      let latLng = {
-        lat: this.wayPointQueue.geometry.location.lat(),
-        lng: this.wayPointQueue.geometry.location.lng(),
-      }
       card.text(this.wayPointQueue.name);
+      card.parent().attr('data-lat', this.wayPointQueue.geometry.location.lat());
+      this.waypoints.splice(this.waypoints.length-1, 0, { location: this.wayPointQueue });
       this.wayPointQueue = null;
-      this.waypoints.push({ location: latLng });
-
       this.directionsRenderer.setMap(this.map);
       this.calculateAndDisplayRoute();
     } else {
@@ -58,6 +55,7 @@ class Route {
     let form = null;
     if(location.hasOwnProperty('name')){
       title.text(location.name);
+      card.attr('data-lat', location.geometry.location.lat());
     }
     else{
       form = document.createElement('input');
@@ -121,7 +119,6 @@ class Route {
 
     mapContainer.append(overlay, map);
     $('.main').append(logo, mapContainer);
-    // cardContainer.append(addCard);
     cardContainer.sortable({
       stop: this.sortWaypoints,
     });
@@ -130,15 +127,22 @@ class Route {
     this.initMap();
   }
   sortWaypoints(){
-    this.waypoints.unshift({ location: this.startLatLng });
-    this.waypoints.push({ location: this.endLatLng });
+    // debugger;
     let cards = $('.card__Container > .overlay__Card');
+    let newWaypoints = []
     for(let i = 0; i < cards.length; i++){
-      // swap
-      if(this.waypoints[i].geometry.location.lat() === cards[i].attr('data-lat') ){
-        //
+      for(let j = 0; j < this.waypoints.length; j++){
+        if (this.waypoints[j].location.name === $(cards[i]).text()){
+          let temp = this.waypoints[i];
+          this.waypoints[i] = this.waypoints[j];
+          this.waypoints[j] = temp;
+          break;
+        }
       }
     }
+    this.directionsService = new google.maps.DirectionsService;
+    this.directionsRenderer.setMap(this.map);
+    this.calculateAndDisplayRoute();
   }
   initMap() {
     this.directionsRenderer = new google.maps.DirectionsRenderer;
@@ -155,10 +159,20 @@ class Route {
   }
 
   calculateAndDisplayRoute() {
+
+    let latLngArr = [];
+    for (let waypoint of this.waypoints){
+      latLngArr.push(
+        { location:
+          { lat: waypoint.location.geometry.location.lat(),
+            lng: waypoint.location.geometry.location.lng()}
+          });
+    }
+
     this.directionsService.route({
-      origin: this.startLatLng,
-      destination: this.endLatLng,
-      waypoints: this.waypoints,
+      origin: latLngArr.shift(),
+      destination: latLngArr.pop(),
+      waypoints: latLngArr,
       travelMode: 'DRIVING'
     }, (response, status) => {
       if (status == 'OK') {
