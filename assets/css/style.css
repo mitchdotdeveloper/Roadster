@@ -371,7 +371,7 @@ body {
   height: 85%;
   width: 90%;
 
-  opacity: 0.8;
+  opacity: 1;
   background-color: #fff;
   border: 2px solid #394a6d;
   border-radius: 5px;
@@ -423,6 +423,8 @@ body {
   display:flex;
   justify-content: flex-start;
   align-items: center;
+  white-space: nowrap;
+  overflow: hidden;
 }
 
 .places__ListItem-Address {
@@ -450,6 +452,10 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+.selected {
+  background-color: #52de97;
 }
 
 /*******************************
