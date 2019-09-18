@@ -14,7 +14,7 @@ class Place {
     this.placesServiceObj = new google.maps.places.PlacesService(this.mapObject);
 
     //Bind methods
-    this.createPlacesTab = this.createPlacesTab.bind(this);
+    this.addResultsToList = this.addResultsToList.bind(this);
     // this.fetchInfoForSearchResult = this.fetchInfoForSearchResult.bind(this);
 
     //Delete this section
@@ -35,34 +35,26 @@ class Place {
     let request = {
       location: locationObjToSearch,
       radius: radius,
-      type: [placeTypes[1]]
+      type: [placeTypes[0]]
     };
 
     console.log('fetchNearbyPlaces:', locationObjToSearch, request);
 
-    //Searches for places within 30km of location, passes array of search results to callback function
-    this.placesServiceObj.nearbySearch(request, this.createPlacesTab);
+    //Searches for places within 15km of location, passes array of search results to callback function
+    this.placesServiceObj.nearbySearch(request, this.addResultsToList);
   }
 
-  createPlacesTab(searchResults, searchStatus) {
+  addResultsToList(searchResults, searchStatus) {
     if (searchStatus !== 'OK') {
       return false;
     }
-    let newPlacesTab = $('<div>').attr('id', 'restraurants-tab').text('Restaurants found near ' + this.locationData.name + ': ')
-    for (var i = 0; i < 9; i++) {
-      let currentPlaceData = this.fetchInfoForSearchResult(newPlacesTab, searchResults[i], i);
-      // newPlacesTab.append($('<div>').addClass('place-result-box')
-      //   .text('Result ' + (i + 1) + ':')
-      //   .append('<br>Name: ' + currentPlaceData['name'])
-      //   .append('<br>Adress: ' + currentPlaceData['formatted_address'])
-      //   .append('<br>Rating: ' + currentPlaceData['rating'] + ' out of 5 stars (' + currentPlaceData['user_ratings_total'] + ' reviews)')
-      //   );
+    for (let resultIndex = 0; resultIndex < 9; resultIndex++) {
+      let currentPlaceData = this.fetchInfoForSearchResult(searchResults[resultIndex]);
     }
-    $('body').append(newPlacesTab);
-    // this.renderPlacesPage();
   }
 
-  fetchInfoForSearchResult(newPlacesTab, searchResult, i) {
+  fetchInfoForSearchResult(searchResult) {
+    let placeListItem = $('<div>').addClass('places__ListItem interstate-light'); //.attr('id', 'restraurants-tab').text('Restaurants found near ' + this.locationData.name + ': ')
     let searchResultData = {};
     let request = {
       placeId: searchResult.place_id,
@@ -75,16 +67,13 @@ class Place {
           searchResultData[request.fields[i]] = place[request.fields[i]];
         }
       }
-      newPlacesTab.append($('<div>').addClass('place-result-box')
-        .text('Result ' + (i + 1) + ':')
-        .append('<br>Name: ' + searchResultData['name'])
-        .append('<br>Address: ' + searchResultData['formatted_address'])
-        .append('<br>Rating: ' + searchResultData['rating'] + ' out of 5 stars (' + searchResultData['user_ratings_total'] + ' reviews)')
-      );
+      placeListItem.append($('<div>').addClass('places__ListItem-Name').text(searchResultData.name)); //.text('Result ' + (resultIndex + 1) + ':')
+      placeListItem.append($('<div>').addClass('places__ListItem-Address').text(searchResultData.formatted_address));
+      placeListItem.append($('<div>').addClass('places__ListItem-Rating').text(`${searchResultData.rating} out of 5 stars ( ${searchResultData.user_ratings_total} reviews)`));
     });
 
+    $('.places__ListContainer').append(placeListItem);
     console.log('fetchingInfoForSearchResult:', searchResultData);
-
   }
 
   renderPlacesPage() {
