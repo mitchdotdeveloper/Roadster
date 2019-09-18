@@ -35,7 +35,11 @@ class Weather {
     const endLocation = this.locationName;
 
     const summaryDiv = $('<div>', {
-      class: 'places__FitlerWeather-Current',
+      class: 'places__FilterWeather-Current',
+    })
+
+    const summarySpan = $('<span>', {
+      class: 'indicatorScroll',
       text: weatherSummary
     })
 
@@ -48,7 +52,8 @@ class Weather {
       class: 'places__FilterWeather-Logo',
       text: weatherIcon
     })
-    
-    $('#places__FilterWeather').append(summaryDiv, currentWeatherDiv, logoDiv);
+
+    summaryDiv.append(summarySpan);
+    $('.places__FilterWeather').append(summaryDiv, currentWeatherDiv, logoDiv);
   }
 }
