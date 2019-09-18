@@ -1,4 +1,10 @@
+/** Class representing places in a given area */
 class Place {
+  /** Constructor stores arguments and creates Google Places object
+      @param {object} mapObject - The Google Maps Map object
+      @param {object} location - An object containing location information on a place
+      @param {callbackFunction} tripCallback - Used to pass array of places back to the Trip object
+   */
   constructor(mapObject, location, tripCallback) {
     //Store data
     this.mapObject = mapObject
@@ -21,11 +27,19 @@ class Place {
     console.log('New Place obj created:', location);
   }
 
+  /** @method onConfirm
+      @param none
+      Passes selected places back to Trip object
+   */
   onConfirm() {
     //Pass selectedPlaces array back to Trip class
     this.tripCallback(this.selectedPlaces);
   }
 
+  /** @method fetchNearbyPlaces
+      @param none
+      Finds neary places to the given location
+   */
   fetchNearbyPlaces() {
     const radius = '15000';
     const placeTypes = ['restaurant', 'lodging', 'natural_feature', 'point_of_interest'];
@@ -44,6 +58,11 @@ class Place {
     this.placesServiceObj.nearbySearch(request, this.addResultsToList);
   }
 
+  /** @method addResultsToList
+      @param {array} searchResults - Array of place objects
+      @param {string} searchStatus - Contains the status of the previous search
+      @returns {boolean} false - If searchStatus !== 'OK'
+   */
   addResultsToList(searchResults, searchStatus) {
     if (searchStatus !== 'OK') {
       return false;
@@ -53,6 +72,10 @@ class Place {
     }
   }
 
+  /** @method fetchInfoForSearchResult
+      @param {object} searchResult - Contains Google Place object
+      Fetches additional data about the Google Place object and appends it to the DOM
+   */
   fetchInfoForSearchResult(searchResult) {
     let placeListItem = $('<div>').addClass('places__ListItem interstate-light'); //.attr('id', 'restraurants-tab').text('Restaurants found near ' + this.locationData.name + ': ')
     let searchResultData = {};
@@ -76,6 +99,10 @@ class Place {
     console.log('fetchingInfoForSearchResult:', searchResultData);
   }
 
+  /** @method renderPlacesPage
+      @param none
+      Appends the Places HTML structure to the DOM
+   */
   renderPlacesPage() {
     const placesDOM =
     $(`
