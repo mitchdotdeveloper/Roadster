@@ -228,6 +228,11 @@ body {
   font-weight: 500;
   font-style: normal;
 }
+.stops::after{
+  display:block;
+  content: 'Drag to reorder';
+  font-size:2rem;
+}
 .overlay__Card{
   cursor: pointer;
   box-shadow: 1px 1px 3px rgba(0,0,0,.5);
@@ -249,11 +254,12 @@ body {
   /* transition: .1s ease; */
 
 }
-.overlay__Card.__Button{
+.overlay__Card.add__Button{
   cursor: pointer;
   color:white;
   background-color:rgba(60, 157, 155, 0.7);
 }
+
 .overlay__Card.confirm{
   background-color: rgba(60, 157, 155, 1);
 }
@@ -261,13 +267,9 @@ body {
   transform: scale(1.05);
 }
 .card__Container{
-  /* display:flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: center; */
   width:100%;
   height:78%;
-  overflow-y: scroll;
+  overflow-y: auto;
 }
 .overlay__Card input[type='text']{
   height:100%;
@@ -288,14 +290,7 @@ body {
   background:none;
   border:none;
 }
-/* .overlay__Card form{
-  height:100%;
-  width:100%;
-}
-.overlay__Card .title{
-  height:100%;
-  width:100%;
-} */
+
 
 /*******************************
           PLACES
