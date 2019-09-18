@@ -24,7 +24,7 @@ class Trip{
   routeCallback(waypoints, map){
     this.waypoints = waypoints;
     this.map = map;
-    this.places = new Place(this.map, this.waypoints[this.waypoints.length-1], this.placesCallback);
+    this.places = new Place(this.map, this.waypoints, this.placesCallback);
     this.weather = new Weather(this.waypoints);
     this.renderEntirePlace(); // Render places page once
     $('#accordion').accordion({
