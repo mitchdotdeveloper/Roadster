@@ -25,8 +25,15 @@ class Trip{
     this.waypoints = waypoints;
     this.map = map;
     this.places = new Place(this.map, this.waypoints[this.waypoints.length-1], this.placesCallback);
-    this.weather = new Weather(this.waypoints[this.waypoints.length-1]);
-    this.renderPlaces();
+    this.weather = new Weather(this.waypoints);
+    this.renderEntirePlace(); // Render places page once
+    $('#accordion').accordion({
+      heightStyle: 'fill',
+      animate: {
+        easing: 'linear',
+        duration: 100
+      }
+    });
   }
 
   /** @method renderRoute
@@ -45,13 +52,15 @@ class Trip{
   }
 
   /** @method renderPlaces
-      @param none
-      Calls fetchNearbyPlaces & renderPlacesPage methods on places object
-   */
-  renderPlaces() {
-    this.places.fetchNearbyPlaces();
+     @param none
+    Calls fetchNearbyPlaces & renderPlacesPage methods on places object
+  */
+  renderEntirePlace() {
     this.places.renderPlacesPage();
+    this.places.fetchNearbyPlaces();
   }
+
+
   // renderWeather() {
   //   this.weather.processWeatherData();
   // }
