@@ -22,6 +22,13 @@ const state = {
 */
 function init(){
   $('#searchBoxGo').on('click', startTrip);
+  $('#accordion').accordion({
+    heightStyle: 'fill',
+    animate: {
+      easing: 'linear',
+      duration: 100
+    }
+  });
 }
 let trip;
 
