@@ -19,6 +19,7 @@ html {
 
 body {
   box-sizing: border-box;
+  overflow: hidden;
 }
 
 .main {
@@ -179,12 +180,299 @@ body {
 }
 
 /*******************************
+            MAP
+*******************************/
+
+.logo{
+  text-align: left;
+  font-size: 3.5rem;
+  text-shadow: 1px 1px 1px #394a6d;
+  font-family: interstate, sans-serif;
+  font-weight: 700;
+  font-style: normal;
+  margin-bottom:5px;
+
+}
+.map__Container{
+  position: relative;
+  width:90%;
+  height:90%;
+}
+#map{
+  border: 4px solid #394a6d;
+  border-radius:10px;
+  width:100%;
+  height:100%;
+  box-shadow: 0 0 5px rgba(0,0,0,.5);
+}
+.map__Overlay{
+  z-index: 101;
+  position: absolute;
+  margin-top:1.5%;
+  left:1%;
+  background-color:rgb(100, 100, 100, .4);
+  border-radius: 15px;
+  height:95%;
+  width:20%;
+  display:flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+
+}
+.stops{
+  margin-top:2%;
+  color:white;
+  font-size:2.75rem;
+  font-family: navigo, sans-serif;
+  font-weight: 500;
+  font-style: normal;
+}
+.stops::after{
+  display:block;
+  content: 'Drag to reorder';
+  font-size:2rem;
+}
+.overlay__Card{
+  cursor: pointer;
+  box-shadow: 1px 1px 3px rgba(0,0,0,.5);
+  display:flex;
+  justify-content: center;
+  align-items: center;
+  font-size:2rem;
+  margin: auto;
+  margin-top: 15px;
+  margin-bottom:10px;
+  width:85%;
+  height:75px;
+  border-radius:5px;
+  background-color:#394a6d;
+  color:white;
+  font-family: interstate, sans-serif;
+  font-weight: 300;
+  font-style: normal;
+  /* transition: .1s ease; */
+
+}
+.overlay__Card.add__Button{
+  cursor: pointer;
+  color:white;
+  background-color:rgba(60, 157, 155, 0.7);
+}
+
+.overlay__Card.confirm{
+  background-color: rgba(60, 157, 155, 1);
+}
+.overlay__Card:hover{
+  transform: scale(1.05);
+}
+.card__Container{
+  width:100%;
+  height:78%;
+  overflow-y: auto;
+}
+.overlay__Card input[type='text']{
+  height:100%;
+  width:80%;
+  background:none;
+  border:none;
+  font-size:2rem;
+  color:white;
+  border-bottom:1px solid white;
+}
+.overlay__Card input::placeholder{
+  color:rgb(200, 200, 200);
+}
+
+.overlay__Card button{
+  color:white;
+  padding:5px;
+  background:none;
+  border:none;
+}
+
+
+/*******************************
+          PLACES
+*******************************/
+
+.places__Container {
+  height: 90%;
+  width: 90%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.places__LogoContainer {
+  height: 5%;
+  width: 95%;
+  display: flex;
+  justify-content:flex-start;
+  align-items: center;
+  font-size: 3rem;
+}
+
+.places__FilterContainer {
+  height: 10%;
+  width: 90%;
+  display:flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.places__FilterButtons {
+  height: 100%;
+  width: 30%;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  /* background-color: #394a6d; */
+  border-radius: 5px;
+}
+
+.places__FilterWeather {
+  height: 100%;
+  width: 65%;
+  border: 2px solid #3c9d9b;
+  border-radius: 5px;
+  font-family: interstate, sans-serif;
+  font-weight: 400;
+  font-style: normal;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.places__FilterWeather-Current {
+  height: 100%;
+  width: 70%;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  font-size: 3.5rem;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.places__FilterWeather-Today,
+.places__FilterWeather-Logo {
+  height: 100%;
+  width: 15%;
+  font-size: 3.5rem;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.places__ListContainer {
+  height: 85%;
+  width: 90%;
+
+  opacity: 1;
+  background-color: #fff;
+  border: 2px solid #394a6d;
+  border-radius: 5px;
+  overflow: auto;
+}
+
+.places__ListItem {
+  height: 15%;
+  width: 100%;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  margin-top: 2px;
+  border: 2px solid #3c9d9b;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.places__ListItem:hover {
+  transform: scale(1.02);
+}
+
+.places__ListItem:active {
+  transform: scale(1);
+}
+
+#accordion .ui-accordion-header {
+  font-size: 2.5rem;
+  display: flex;
+  align-items: center;
+  outline: none;
+}
+
+.places__Accordion-Weather {
+  margin-left: auto;
+}
+
+#accordion .ui-accordion-header-active {
+  background-color: #394a6d;
+  color: #fff;
+  outline: none;
+}
+
+.places__ListItem-Name {
+  height: 100%;
+  width: 50%;
+  font-size: 4rem;
+  display:flex;
+  justify-content: flex-start;
+  align-items: center;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.places__ListItem-Address {
+  height: 100%;
+  width:  25%;
+  font-size: 2rem;
+  display:flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.places__ListItem-Rating {
+  height: 100%;
+  width: 25%;
+  font-size: 2rem;
+  display:flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.places__Confirm {
+  height: 5%;
+  width: 100%;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.selected {
+  background-color: #52de97;
+}
+
+/*******************************
+          WEATHER
+*******************************/
+.weatherIcon {
+  margin-left: 2rem;
+}
+
+/*******************************
           BUTTONS
 *******************************/
 
 .btn, .btn:link, .btn:visited {
   font-size: 2rem;
   text-decoration: none;
+  text-align: center;
   text-transform: capitalize;
   padding: 1rem 2.5rem;
   border-radius: 5rem;
@@ -222,13 +510,14 @@ body {
   transition: all 0.3s;
 }
 
-/* .btn--white {
-  background-color: #fff;
-  color: #777;
+.btn--white {
+  background-color:  #394a6d;
+  color: #fff;
 }
 .btn--white::after {
-  background-color: #fff;
-} */
+  background-color:  #394a6d;
+  color: #fff;
+}
 
 .btn--green {
   background-color: #52de97;
@@ -236,4 +525,40 @@ body {
 }
 .btn--green::after {
   background-color: #52de97;
+}
+
+/*******************************
+          FINAL PAGE
+*******************************/
+.final__Container{
+  width:100%;
+  height:100%;
+  display:flex;
+  align-items: center;
+  flex-direction: column;
+  justify-content: flex-start;
+  margin-top:5%;
+  font-family: interstate, sans-serif;
+  font-style: normal;
+  font-size:2rem;
+}
+.final__Container .trip{
+  width:80%;
+  text-align: center;
+  font-size:3rem;
+  padding-bottom:15px;
+  border-bottom:5px solid #52de97;
+}
+.place__Container{
+  display:flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  text-align: left;
+  width:50%;
+  margin:25px;
+}
+.final__Logo{
+  font-weight: 700;
+  font-size: 10rem;
 }

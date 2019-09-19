@@ -5,37 +5,28 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Road trip Planner</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.2/css/all.css">
     <!-- Fonts -->
     <link rel="stylesheet" href="https://use.typekit.net/fjk8vsw.css">
     <!-- End fonts -->
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <link rel="stylesheet" href="css/weather-icons.min.css">
     <link rel="stylesheet" href="css/style.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.0/jquery-ui.min.js"
+      integrity="sha256-eGE6blurk5sHj+rmkfsGYeKyZx3M4bG+ZlFyA7Kns7E=" crossorigin="anonymous"></script>
+    <script src="js/mapconfig.js"></script>
     <script src="js/route.js"></script>
+    <script src="js/weather.js"></script>
     <script src="js/place.js"></script>
     <script src="js/trip.js"></script>
     <script src="js/main.js"></script>
-  <style>
-    /* Always set the map height explicitly to define the size of the div
-         * element that contains the map. */
-    #map {
-      height: 100%;
-      z-index: 100;
-    }
-
-    /* Optional: Makes the sample page fill the window. */
-    html,
-    body {
-      height: 100%;
-      margin: 0;
-      padding: 0;
-    }
-  </style>
   </head>
   <body>
     <div class="main">
       <div class="landing__Container">
         <div class="landing__Video">
-          <video src="videos/Map.mp4" class="landing__Video-Content" autoplay muted loop>
+          <video src="videos/Map2.mp4" class="landing__Video-Content" autoplay muted loop>
           </video>
           <div class="landing__Video-Overlay"></div>
           <div class="landing__Logo">
@@ -62,10 +53,76 @@
           </div>
         </div>
       </div>
-    </div>
-      <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCCTAAEEhSiI6Cag0AlPwdJzE5zI5yJEag&libraries=places&callback=autocompleteLoad" async
-        defer></script>
+      <!-- <div class="places__Container">
+        <div class="places__LogoContainer">
+          <h2 class="interstate-bold">ROADSTER</h2>
+        </div>
+        <div class="places__ListContainer">
+          <div class="places__ListContainer-Accordion interstate-light" id="accordion">
+            <h1 class="places__Accordion-Name">Las Vegas <span class=places__Accordion-Weather>Current Weather: 79&#8457; </span></h1>
+            <div class="places__AccordionContainer">
+              <div class="places__ListItem">
+                <div class="places__ListItem-Name">Mastros</div>
+                <div class="places__ListItem-Address"> Addresss</div>
+                <div class="places__ListItem-Rating"> 4.9 out of 5 stars</div>
+              </div>
+              <div class="places__ListItem">
+                <div class="places__ListItem-Name">Mastros</div>
+                <div class="places__ListItem-Address"> Addresss</div>
+                <div class="places__ListItem-Rating"> 4.9 out of 5 stars</div>
+              </div>
+              <div class="places__ListItem">
+                <div class="places__ListItem-Name">Mastros</div>
+                <div class="places__ListItem-Address"> Addresss</div>
+                <div class="places__ListItem-Rating"> 4.9 out of 5 stars</div>
+              </div>
+              <div class="places__ListItem">
+                <div class="places__ListItem-Name">Mastros</div>
+                <div class="places__ListItem-Address"> Addresss</div>
+                <div class="places__ListItem-Rating"> 4.9 out of 5 stars</div>
+              </div>
+              <div class="places__ListItem">
+                <div class="places__ListItem-Name">Mastros</div>
+                <div class="places__ListItem-Address"> Addresss</div>
+                <div class="places__ListItem-Rating"> 4.9 out of 5 stars</div>
+              </div>
+              <div class="places__ListItem">
+                <div class="places__ListItem-Name">Mastros</div>
+                <div class="places__ListItem-Address"> Addresss</div>
+                <div class="places__ListItem-Rating"> 4.9 out of 5 stars</div>
+              </div>
+              <div class="places__ListItem">
+                <div class="places__ListItem-Name">Mastros</div>
+                <div class="places__ListItem-Address"> Addresss</div>
+                <div class="places__ListItem-Rating"> 4.9 out of 5 stars</div>
+              </div>
+            </div>
+            <h1 class="places__Accordion-Name">San Fransisco <span class=places__Accordion-Weather>Current Weather: 79&#8457;</span><i class="wi wi-night-sleet weatherIcon"></i> </h1>
+            <div class="places__AccordionContainer">
+              <div class="places__ListItem">
+                <div class="places__ListItem-Name">Mastros</div>
+                <div class="places__ListItem-Address"> Addresss</div>
+                <div class="places__ListItem-Rating"> 4.9 out of 5 stars</div>
+              </div>
+            </div>
+            <h1 class="places__Accordion-Name">New York <span class=places__Accordion-Weather>Current Weather: 79&#8457; </span></h1>
+            <div class="places__AccordionContainer">
+              <div class="places__ListItem">
+                <div class="places__ListItem-Name">Mastros</div>
+                <div class="places__ListItem-Address"> Addresss</div>
+                <div class="places__ListItem-Rating"> 4.9 out of 5 stars</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="places__Confirm">
+          <button class="btn btn--green" >Confirm</button>
+        </div>
+      </div>
+    </div> -->
+      <!-- <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCCTAAEEhSiI6Cag0AlPwdJzE5zI5yJEag&libraries=places&callback=autocompleteLoad" async
+        defer></script> -->
   </body>
-        <!-- <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAGcnHGaTjPgQDfwq2MdeCJx60EqC5ud0c" async defer></script>' -->
+        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAGcnHGaTjPgQDfwq2MdeCJx60EqC5ud0c&libraries=places&callback=autocompleteLoad" async defer></script>'
 
 </html>
