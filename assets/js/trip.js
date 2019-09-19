@@ -48,8 +48,26 @@ class Trip {
   /** @method placesCallback
       @param none
    */
-  placesCallback() {
-
+  placesCallback(placesArray) {
+    console.log(placesArray);
+    const main = $('.main');
+    main.empty();
+    let container = $('<div>').addClass('final__Container');
+    main.append(container);
+    container.append($('<div>').text('ROADSTER').addClass('final__Logo'));
+    container.append($('<div>').text('Your Trip').addClass('trip'));
+    for(let i = 0; i < placesArray.length; i++){
+      let placeContainer = $('<div>').addClass('place__Container');
+      let name = placesArray[i].waypointName;
+      let heading = $('<h1>').html(name);
+      let ul = $('<ul>')
+      for(let place of placesArray[i].waypointSelectedPlaces){
+        let li = $('<li>').html(place);
+        ul.append(li);
+      }
+      placeContainer.append(heading, ul);
+      container.append(placeContainer);
+    }
   }
 
   /** @method renderPlaces
