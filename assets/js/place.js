@@ -21,9 +21,6 @@ class Place {
     this.addResultsToList = this.addResultsToList.bind(this);
     this.accordionClickHandler = this.accordionClickHandler.bind(this);
     this.placeResultClickHandler = this.placeResultClickHandler.bind(this);
-
-    //Delete this section
-    console.log('New Place obj created:', this, this.waypointsArray);
   }
 
   /** @method onConfirm
@@ -31,13 +28,20 @@ class Place {
       Passes selected places back to Trip object
    */
   onConfirm() {
-    let selectedPlacesObj = $('.selected');
-    console.log(selectedPlacesObj);
-    for (let selectionIndex = 0; selectionIndex < selectedPlacesObj.length; selectionIndex++) {
-      this.selectedPlaces.push(selectedPlacesObj[selectionIndex].firstChild.innerHTML);
+    let selectedPlacesObj = document.querySelectorAll('.selected');
+    for (let waypointIndex of this.waypointsArray) {
+      let currentSelection = {
+        waypointName: waypointIndex.location.name,
+        waypointSelectedPlaces: []
+      };
+      for (let selectionIndex = 0; selectionIndex < selectedPlacesObj.length; selectionIndex++) {
+        if (selectedPlacesObj[selectionIndex].parentElement.previousSibling.previousSibling.innerText.includes(currentSelection.waypointName)) {
+          currentSelection.waypointSelectedPlaces.push(selectedPlacesObj[selectionIndex].firstChild.innerHTML);
+        }
+      }
+      this.selectedPlaces.push(currentSelection);
     }
     this.tripCallback(this.selectedPlaces);
-    console.log(this.selectedPlaces);
   }
 
 /** @method fetchNearbyPlaces
@@ -55,7 +59,6 @@ class Place {
 
     //Create Google Places Location & Request objects
     const locationDataPromise = new Promise((resolve, reject) => {
-      console.log('Getting location values now');
       let currentStopLocationData = {
         name: waypoint.location.name,
         lat: waypoint.location.geometry.location.lat(),
@@ -65,17 +68,12 @@ class Place {
     });
 
     locationDataPromise.then((currentStopLocationData) => {
-      console.log('After getting location values');
       let locationObjToSearch = new google.maps.LatLng(currentStopLocationData.lat, currentStopLocationData.lng);
       let request = {
         location: locationObjToSearch,
         radius: radius,
         type: [placeType]
       };
-
-      //Delete this section
-      console.log('fetchNearbyPlaces:', locationObjToSearch, request, arguments, currentStopLocationData);
-
       //Searches for places within 15km of location, passes array of search results to callback function
       this.placesServiceObj.nearbySearch(request, this.addResultsToList);
     });
@@ -108,7 +106,6 @@ class Place {
         'url', 'types', 'photos', 'rating', 'user_ratings_total', 'price_level']
     };
     this.placesServiceObj.getDetails(request, function(place, status) {
-      console.log('Detailed search status:', status);
       if (status !== 'OK') {
         return false;
       }
@@ -120,11 +117,8 @@ class Place {
       placeListItem.append($('<div>').addClass('places__ListItem-Address').text(searchResultData.formatted_address));
       placeListItem.append($('<div>').addClass('places__ListItem-Rating').text(`${searchResultData.rating} out of 5 stars (${searchResultData.user_ratings_total} reviews)`));
     });
-
     $('#places__AccordionContainer' + (this.waypointsArray.indexOf(this.currentWaypoint))).append(placeListItem);
 
-    //Delete this section
-    console.log('fetchingInfoForSearchResult:', searchResultData);
   }
 
   /** @method renderPlacesPage
