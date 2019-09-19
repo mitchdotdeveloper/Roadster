@@ -49,10 +49,9 @@ class Trip {
       @param none
    */
   placesCallback(placesArray) {
-    console.log(placesArray);
     const main = $('.main');
-    main.empty();
     let container = $('<div>').addClass('final__Container');
+    main.empty();
     main.append(container);
     container.append($('<div>').text('ROADSTER').addClass('final__Logo'));
     container.append($('<div>').text('Your Trip').addClass('trip'));
