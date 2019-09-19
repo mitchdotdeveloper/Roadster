@@ -1,3 +1,6 @@
+# Group 3
+figma: https://www.figma.com/file/6Nh0Ll4cv6GZPGTkfYbi5w/Hackathon-2?node-id=0%3A1
+
 # c819_hackathon2
 
 Hackathon project involving the combination of different data sources into an application or game
