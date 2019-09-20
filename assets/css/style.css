@@ -26,7 +26,6 @@ body {
   height: 100vh;
   width: 100vw;
   background-image: linear-gradient(#fff 20%, #3c9d9b);
-
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -87,15 +86,6 @@ body {
   z-index: 1;
 }
 
-/* .landing__Video-Overlay {
-  position: fixed;
-  height: 40%;
-  width: 81%;
-  background-color: rgba(0, 0, 0, 0.8);
-  border-radius: 5px;
-  z-index: 1;
-} */
-
 .landing__Logo {
   height: 20%;
   width: 50%;
@@ -136,7 +126,6 @@ body {
   flex-direction: column;
   justify-content: space-around;
   align-items: center;
-
 }
 
 .landing__SearchBox-Title {
@@ -328,7 +317,6 @@ body {
   display: flex;
   justify-content: space-around;
   align-items: center;
-  /* background-color: #394a6d; */
   border-radius: 5px;
 }
 
@@ -361,7 +349,6 @@ body {
   height: 100%;
   width: 15%;
   font-size: 3.5rem;
-
   display: flex;
   justify-content: center;
   align-items: center;
@@ -370,7 +357,6 @@ body {
 .places__ListContainer {
   height: 85%;
   width: 90%;
-
   opacity: 1;
   background-color: #fff;
   border: 2px solid #394a6d;
@@ -448,7 +434,6 @@ body {
 .places__Confirm {
   height: 5%;
   width: 100%;
-
   display: flex;
   justify-content: center;
   align-items: center;
