@@ -7,7 +7,6 @@ class Weather {
     this.renderWeatherData = this.renderWeatherData.bind(this);
 
     this.locationArray = locationArray;
-    console.log(this.locationArray);
     this.currentIndex = 1;
     this.dailyWeather = {};
     this.currentWeather = {}
