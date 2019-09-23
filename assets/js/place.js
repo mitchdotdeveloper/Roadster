@@ -29,18 +29,20 @@ class Place {
    */
   onConfirm() {
     let selectedPlacesObj = document.querySelectorAll('.selected');
-    for (let waypointIndex of this.waypointsArray) {
+    for (let waypointIndex = 1; waypointIndex < this.waypointsArray.length; waypointIndex++) {
       let currentSelection = {
-        waypointName: waypointIndex.location.name,
+        waypointName: this.waypointsArray[waypointIndex].location.name,
         waypointSelectedPlaces: []
       };
       for (let selectionIndex = 0; selectionIndex < selectedPlacesObj.length; selectionIndex++) {
-        if (selectedPlacesObj[selectionIndex].parentElement.previousSibling.previousSibling.innerText.includes(currentSelection.waypointName)) {
-          currentSelection.waypointSelectedPlaces.push(selectedPlacesObj[selectionIndex].firstChild.innerHTML);
+        if (selectedPlacesObj[selectionIndex].parentElement.previousElementSibling.innerText.includes(currentSelection.waypointName)) {
+          currentSelection.waypointSelectedPlaces.push(selectedPlacesObj[selectionIndex].firstElementChild.nextElementSibling.firstElementChild.innerText);
         }
       }
+      console.log(currentSelection);
       this.selectedPlaces.push(currentSelection);
     }
+    this.selectedPlaces.unshift({ waypointName: this.waypointsArray[0].location.name, waypointSelectedPlaces: [] });
     this.tripCallback(this.selectedPlaces);
   }
 
