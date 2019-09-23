@@ -402,9 +402,14 @@ body {
   outline: none;
 }
 
+.places__ListItem-Photo {
+  height: 100%;
+  width: 15%;
+}
+
 .places__ListItem-Name {
   height: 100%;
-  width: 50%;
+  width: 35%;
   font-size: 4rem;
   display:flex;
   justify-content: flex-start;
@@ -427,8 +432,9 @@ body {
   width: 25%;
   font-size: 2rem;
   display:flex;
-  justify-content: flex-start;
-  align-items: center;
+  flex-flow: column nowrap;
+  justify-content: center;
+  align-items: flex-start;
 }
 
 .places__Confirm {
