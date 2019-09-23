@@ -7,7 +7,7 @@ class Weather {
     this.renderWeatherData = this.renderWeatherData.bind(this);
 
     this.locationArray = locationArray;
-
+    console.log(this.locationArray);
     this.currentIndex = 1;
     this.dailyWeather = {};
     this.currentWeather = {}
@@ -26,7 +26,7 @@ class Weather {
       method: 'GET',
       url: `https://cors-anywhere.herokuapp.com/https://api.darksky.net/forecast/c8c585560e5f64a47e3b64cd50e74e26/${locationLat},${locationLng}`,
       success: (weather) => {
-        const locationName = this.locationArray[this.currentIndex].location.address_components[0].long_name;
+        const locationName = this.locationArray[this.currentIndex].location.formatted_address.split(',')[0];
         $(`#places__Accordion-Weather${this.currentIndex}`).before(locationName);
         this.dailyWeather = weather.daily;
         this.currentWeather = weather.currently;
