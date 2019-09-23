@@ -410,6 +410,7 @@ body {
 }
 
 #accordion .ui-accordion-header-active {
+  border: 1px solid #394a6d;
   background-color: #394a6d;
   color: #fff;
   outline: none;
