@@ -1,13 +1,12 @@
 /** Class represents the weather at a given location */
 /** Constructor initializes necessary properties and calls precessWeatherData method
-      @param {object} location - Contains location information at a lat & lng
+      @param {Array} location - Contains location information from all the stops to final destination
    */
 class Weather {
   constructor(locationArray) {
     this.renderWeatherData = this.renderWeatherData.bind(this);
 
     this.locationArray = locationArray;
-
     this.currentIndex = 1;
     this.dailyWeather = {};
     this.currentWeather = {}
@@ -26,7 +25,7 @@ class Weather {
       method: 'GET',
       url: `https://cors-anywhere.herokuapp.com/https://api.darksky.net/forecast/c8c585560e5f64a47e3b64cd50e74e26/${locationLat},${locationLng}`,
       success: (weather) => {
-        const locationName = this.locationArray[this.currentIndex].location.address_components[0].long_name;
+        const locationName = this.locationArray[this.currentIndex].location.formatted_address.split(',')[0];
         $(`#places__Accordion-Weather${this.currentIndex}`).before(locationName);
         this.dailyWeather = weather.daily;
         this.currentWeather = weather.currently;
@@ -37,10 +36,9 @@ class Weather {
         }
       },
       error: function (error) {
-        console.log(error)
+        alert(error);
       }
     }
-
     $.ajax(weatherData);
 
   }
@@ -51,6 +49,11 @@ class Weather {
   renderWeatherData() {
     const weatherNow = this.currentWeather.apparentTemperature;
     const weatherIcon = this.currentWeather.icon;
+    const summary = this.dailyWeather.summary;
+
+    let weatherForecastDiv = $('<div>', {
+      class: 'places__ListWeather'
+    })
 
     let weatherLogo = null;
 
@@ -89,7 +92,8 @@ class Weather {
         weatherLogo = $('<i>').addClass('wi wi-na weatherIcon');
         break;
     }
-
+    $(`#places__AccordionContainer${this.currentIndex}`).prepend(weatherForecastDiv);
+    weatherForecastDiv.text(summary);
     $(`#places__Accordion-Name${this.currentIndex}`).append(weatherLogo);
     $(`#places__Accordion-Weather${this.currentIndex}`).text(`Current Weather: ${weatherNow}`).append('\u2109');
   }

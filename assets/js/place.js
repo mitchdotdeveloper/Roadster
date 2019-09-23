@@ -29,18 +29,19 @@ class Place {
    */
   onConfirm() {
     let selectedPlacesObj = document.querySelectorAll('.selected');
-    for (let waypointIndex of this.waypointsArray) {
+    for (let waypointIndex = 1; waypointIndex < this.waypointsArray.length; waypointIndex++) {
       let currentSelection = {
-        waypointName: waypointIndex.location.name,
+        waypointName: this.waypointsArray[waypointIndex].location.name,
         waypointSelectedPlaces: []
       };
       for (let selectionIndex = 0; selectionIndex < selectedPlacesObj.length; selectionIndex++) {
-        if (selectedPlacesObj[selectionIndex].parentElement.previousSibling.previousSibling.innerText.includes(currentSelection.waypointName)) {
-          currentSelection.waypointSelectedPlaces.push(selectedPlacesObj[selectionIndex].firstChild.innerHTML);
+        if (selectedPlacesObj[selectionIndex].parentElement.previousElementSibling.innerText.includes(currentSelection.waypointName)) {
+          currentSelection.waypointSelectedPlaces.push(selectedPlacesObj[selectionIndex].firstElementChild.nextElementSibling.firstElementChild.innerText);
         }
       }
       this.selectedPlaces.push(currentSelection);
     }
+    this.selectedPlaces.unshift({ waypointName: this.waypointsArray[0].location.name, waypointSelectedPlaces: [] });
     this.tripCallback(this.selectedPlaces);
   }
 
@@ -95,10 +96,9 @@ class Place {
 
   /** @method fetchInfoForSearchResult
       @param {object} searchResult - Contains Google Place object
-      Fetches additional data about the Google Place object and appends it to the DOM
+      Fetches additional data about the Google Place object
    */
   fetchInfoForSearchResult(searchResult) {
-    let placeListItem = $('<div>').addClass('places__ListItem');
     let searchResultData = {};
     let request = {
       placeId: searchResult.place_id,
@@ -112,13 +112,81 @@ class Place {
       for (let field of request.fields) {
         searchResultData[field] = place[field];
       }
-
-      placeListItem.append($('<div>').addClass('places__ListItem-Name').text(searchResultData.name));
-      placeListItem.append($('<div>').addClass('places__ListItem-Address').text(searchResultData.formatted_address));
-      placeListItem.append($('<div>').addClass('places__ListItem-Rating').text(`${searchResultData.rating} out of 5 stars (${searchResultData.user_ratings_total} reviews)`));
+      trip.places.renderPlaceResultBox(searchResultData);
     });
-    $('#places__AccordionContainer' + (this.waypointsArray.indexOf(this.currentWaypoint))).append(placeListItem);
+  }
 
+  /** @method renderPlaceResultBox
+      @param {object} searchResultData - Contains Google Place object data
+      Appends additional data about the Google Place search result to the DOM
+  */
+  renderPlaceResultBox(searchResultData) {
+    let placeListItem = $('<div>').addClass('places__ListItem');
+
+    placeListItem.append($('<img>').addClass('places__ListItem-Photo').attr('src', searchResultData.photos[0].getUrl()));
+
+    let nameField = $('<div>').addClass('places__ListItem-Name');
+    nameField.append($('<a>').attr({ 'href': searchResultData.url, 'target': '_blank' }).text(searchResultData.name));
+    placeListItem.append(nameField);
+
+    placeListItem.append($('<div>').addClass('places__ListItem-Address').text(searchResultData.formatted_address));
+
+    let ratingElementsContainer = $('<div>').addClass('places__ListItem-Rating');
+    let priceLevelDisplay = $('<span>').text('Price Level: ' + this.showPriceLevel(searchResultData.price_level));
+    ratingElementsContainer.append(priceLevelDisplay);
+    let starRatingDisplay = this.showStarRating(searchResultData.rating, searchResultData.user_ratings_total);
+    ratingElementsContainer.append(starRatingDisplay);
+    placeListItem.append(ratingElementsContainer);
+
+    $('#places__AccordionContainer' + (this.waypointsArray.indexOf(this.currentWaypoint))).append(placeListItem);
+  }
+
+  /** @method showPriceLevel
+      @param {number} priceLevel - price level number between 0 and 4
+      @returns {string} priceLevelString - String for displaying price level
+      Creates string for price level indicator based on Google Place price data
+  */
+  showPriceLevel(priceLevel = 0) {
+    let priceLevelString = '';
+    for (let dollarSigns = 0; dollarSigns < priceLevel; dollarSigns++) {
+      priceLevelString += '$';
+    }
+    for (let dashes = 0; dashes < (4 - priceLevel); dashes++) {
+      priceLevelString += '-';
+    }
+    return priceLevelString;
+  }
+
+  /** @method showStarRating
+      @param {number} rating - rating between 0.0 and 5.0
+      @param {number} userRatingsTotal - number of total reviews on Google Places
+      @returns {object} starRatingContainer - DOM elements for displaying 5 star rating icons
+      Renders DOM elements for 5 star rating icons based on Google Place rating
+  */
+  showStarRating(rating, userRatingsTotal) {
+    let roundedRating = Math.round(rating * 2) / 2;
+    let starRatingContainer = $('<div>').addClass('places__RatingContainer');
+    let filledStars = Math.floor(roundedRating);
+    let halfStars = null;
+    if (Number.isInteger(roundedRating)) {
+      halfStars = 0;
+    } else {
+      halfStars = 1;
+    }
+    let emptyStars = 5 - (filledStars + halfStars);
+    while (filledStars > 0) {
+      starRatingContainer.append($('<i>').addClass('fas fa-star'));
+      filledStars--;
+    }
+    if (halfStars) {
+      starRatingContainer.append($('<i>').addClass('fas fa-star-half-alt'));
+    }
+    while (emptyStars > 0) {
+      starRatingContainer.append($('<i>').addClass('far fa-star'));
+      emptyStars--;
+    }
+    starRatingContainer.append(`&nbsp;${rating}/5 stars (${userRatingsTotal} reviews)`);
+    return starRatingContainer;
   }
 
   /** @method renderPlacesPage
@@ -156,12 +224,21 @@ class Place {
     this.addClickHandlers();
   }
 
+  /** @method addClickHandlers
+      @param none
+      Attaches click handlers to DOM elements on Places page
+  */
   addClickHandlers() {
     $('.places__Confirm').on('click', this.onConfirm);
     $('.places__Accordion-Name').on('click', this.accordionClickHandler);
     $('#accordion').on('click', '.places__ListItem', this.placeResultClickHandler);
   }
 
+  /** @method accordionClickHandler
+      @param {object} event - Event object for clicked accordion heading
+      @returns {boolean} false - If search data was already fetched
+      When clicking on an accordion heading, find places search results near that stop
+  */
   accordionClickHandler(event) {
     let clickedWaypointIndex = $(event.currentTarget).attr('id').slice(-1);
     if (this.waypointsArray[clickedWaypointIndex].fetchedData) {
@@ -170,6 +247,10 @@ class Place {
     this.fetchNearbyPlaces(this.waypointsArray[clickedWaypointIndex], 'restaurant');
   }
 
+  /** @method placeResultClickHandler
+      @param {object} event - Event object for clicked place search result
+      Toggles class for selected/unselected place search result
+  */
   placeResultClickHandler(event) {
     $(event.currentTarget).toggleClass('selected');
   }
