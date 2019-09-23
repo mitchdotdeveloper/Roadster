@@ -1,6 +1,6 @@
 /** Class represents the weather at a given location */
 /** Constructor initializes necessary properties and calls precessWeatherData method
-      @param {object} location - Contains location information at a lat & lng
+      @param {Array} location - Contains location information from all the stops to final destination
    */
 class Weather {
   constructor(locationArray) {
@@ -37,10 +37,9 @@ class Weather {
         }
       },
       error: function (error) {
-        console.log(error)
+        alert(error);
       }
     }
-
     $.ajax(weatherData);
 
   }
@@ -51,6 +50,11 @@ class Weather {
   renderWeatherData() {
     const weatherNow = this.currentWeather.apparentTemperature;
     const weatherIcon = this.currentWeather.icon;
+    const summary = this.dailyWeather.summary;
+
+    let weatherForecastDiv = $('<div>', {
+      class: 'places__ListWeather'
+    })
 
     let weatherLogo = null;
 
@@ -89,7 +93,8 @@ class Weather {
         weatherLogo = $('<i>').addClass('wi wi-na weatherIcon');
         break;
     }
-
+    $(`#places__AccordionContainer${this.currentIndex}`).prepend(weatherForecastDiv);
+    weatherForecastDiv.text(summary);
     $(`#places__Accordion-Name${this.currentIndex}`).append(weatherLogo);
     $(`#places__Accordion-Weather${this.currentIndex}`).text(`Current Weather: ${weatherNow}`).append('\u2109');
   }

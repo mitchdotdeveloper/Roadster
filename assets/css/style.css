@@ -385,6 +385,19 @@ body {
   transform: scale(1);
 }
 
+.places__ListWeather {
+  height: 10%;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #fff;
+  background-color: #394a6d;
+  border-radius: 5px;
+  font-size: 2rem;
+  border: 2px solid #394a6d;
+}
+
 #accordion .ui-accordion-header {
   font-size: 2.5rem;
   display: flex;
