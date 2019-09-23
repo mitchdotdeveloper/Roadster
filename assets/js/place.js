@@ -39,7 +39,6 @@ class Place {
           currentSelection.waypointSelectedPlaces.push(selectedPlacesObj[selectionIndex].firstElementChild.nextElementSibling.firstElementChild.innerText);
         }
       }
-      console.log(currentSelection);
       this.selectedPlaces.push(currentSelection);
     }
     this.selectedPlaces.unshift({ waypointName: this.waypointsArray[0].location.name, waypointSelectedPlaces: [] });
