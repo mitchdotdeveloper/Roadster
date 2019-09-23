@@ -419,17 +419,30 @@ body {
 .places__ListItem-Photo {
   height: 100%;
   width: 15%;
+  background-size: contain;
 }
 
 .places__ListItem-Name {
   height: 100%;
   width: 35%;
-  font-size: 4rem;
+  font-size: 3rem;
   display:flex;
   justify-content: flex-start;
   align-items: center;
   white-space: nowrap;
   overflow: hidden;
+}
+
+.places__ListItem-Name a {
+  transition: all 0.2s;
+}
+
+.places__ListItem-Name a:Hover {
+  color: #3c9d9b;
+}
+
+.fas, .fas, .fa-star {
+  color: #3c9d9b;
 }
 
 .places__ListItem-Address {
