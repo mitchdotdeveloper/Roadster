@@ -1,6 +1,6 @@
 # Roadster
 
-A road trip planning application that maps out your stops along the way and offers restauraunts at each stop
+A road trip planning application that maps out your stops along the way and offers restaurants at each stop
 
 ## Technologies Used
 
